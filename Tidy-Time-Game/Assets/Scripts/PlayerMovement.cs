@@ -5,28 +5,43 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     // Variables
-    public float moveSpeed;
+    public float maxSpeed;
+    public float acceleration;
+    public float deceleration;
     public Rigidbody2D playerRigidBody;
     private Vector2 moveDirection;
-    // Inputs
+    private Vector2 currentVelocity = Vector2.zero;
+
     void Update()
     {
         ProcessInputs();
     }
-    //Physics Calculations
+
     void FixedUpdate()
     {
         Move();
     }
 
-    void ProcessInputs(){
+    void ProcessInputs()
+    {
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
-
-        moveDirection = new Vector2(moveX, moveY); //
+        moveDirection = new Vector2(moveX, moveY).normalized;
     }
 
-    void Move(){
-        playerRigidBody.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
+    void Move()
+    {
+        if (moveDirection.magnitude > 0)
+        {
+            // Instant acceleration with slight velocity change for responsiveness
+            currentVelocity = moveDirection * maxSpeed;
+        }
+        else
+        {
+            // Instant stopping with slight smoothing
+            currentVelocity = Vector2.Lerp(currentVelocity, Vector2.zero, deceleration * Time.fixedDeltaTime);
+        }
+
+        playerRigidBody.velocity = currentVelocity;
     }
 }
