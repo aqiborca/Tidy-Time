@@ -33,12 +33,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (moveDirection.magnitude > 0)
         {
-            // Instant acceleration with slight velocity change for responsiveness
             currentVelocity = moveDirection * maxSpeed;
         }
         else
         {
-            // Instant stopping with slight smoothing
             currentVelocity = Vector2.Lerp(currentVelocity, Vector2.zero, deceleration * Time.fixedDeltaTime);
         }
 
