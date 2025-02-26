@@ -1,3 +1,9 @@
+/*
+This script contains the Math Homework chore
+TO DO
+Make the difficulty of the math game gradual, and show questions one by one after completion
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +11,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class MathMiniGame : MonoBehaviour
+public class MathChore : MonoBehaviour
 {
 
     public TMP_Text[] questionTexts;
@@ -27,7 +33,7 @@ public class MathMiniGame : MonoBehaviour
     {
         questions.Clear();
         correctAnswers.Clear();
-        string[] operators = {"+", "*"};
+        string[] operators = {"+", "-"};
 
         for (int i = 0; i < questionTexts.Length; i++)
         {
@@ -51,7 +57,7 @@ public class MathMiniGame : MonoBehaviour
         switch (op)
         {
             case "+": return num1 + num2;
-            case "*": return num1 * num2;
+            case "-": return num1 - num2;
             default: return 0;
         }
     }
