@@ -1,5 +1,6 @@
 /*
 This class detects if a player is inside of a prop collider and allows them to press the respective button
+Attached to: Player Object
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -29,12 +30,17 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ProcessInputs();
+        if (enabled) // Only process inputs if the script is enabled
+        {
+            ProcessInputs();
+        }
     }
-    // FixUpdate is called -----
     void FixedUpdate()
     {
-        Move();
+        if (enabled) // Only move if the script is enabled
+        {
+            Move();
+        }
     }
     // Inputs for player movement
     void ProcessInputs()
@@ -75,5 +81,11 @@ public class PlayerScript : MonoBehaviour
             Vector3 savedPosition = DataManager.Instance.GetPlayerPosition();
             transform.position = savedPosition;
         }
+    }
+    // Method to stop movement
+    public void StopMovement()
+    {
+        playerRigidBody.velocity = Vector2.zero; // Reset velocity
+        moveDirection = Vector2.zero; // Clear movement input
     }
 }

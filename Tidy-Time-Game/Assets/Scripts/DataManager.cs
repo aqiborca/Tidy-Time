@@ -1,5 +1,6 @@
 /*
 This script allows for saving data between scenes
+Attached to: Data Manager Object
 */
 using UnityEngine;
 

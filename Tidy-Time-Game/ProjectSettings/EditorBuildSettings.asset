@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Chore Fishbowl.unity
     guid: f918dc752803e3a44bc2a49dbae6041e
   - enabled: 1
+    path: Assets/Scenes/Chore Plushies.unity
+    guid: 2c5aa828e113fc042abc26301d709e83
+  - enabled: 1
     path: Assets/Scenes/Call Mom.unity
     guid: 75f55a389ad8fb44cbfa0a61a8c661a5
   m_configObjects: {}

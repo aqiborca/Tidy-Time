@@ -1,5 +1,6 @@
 /*
 This class detects if a player is inside of a prop collider and allows them to press the respective button
+Attached to: Prop Collider Objects
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +38,6 @@ public class PropCollider : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Player entered the collider!");
             if (interactButton != null)
             {
                 interactButton.interactable = true;
@@ -50,7 +50,6 @@ public class PropCollider : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Player exited the collider!");
             if (interactButton != null)
             {
                 interactButton.interactable = false;
