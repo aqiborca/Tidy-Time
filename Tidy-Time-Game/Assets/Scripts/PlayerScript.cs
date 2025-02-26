@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     public float deceleration;
     public Rigidbody2D playerRigidBody;
     public GameObject escPanel; // Reference to the ESC Panel
+    public TimerScript timerScript; // Reference to the TimerScript
     private Vector2 moveDirection;
     private Vector2 currentVelocity = Vector2.zero;
     private bool canMove = true; // Flag to control movement
@@ -118,10 +119,22 @@ public class PlayerScript : MonoBehaviour
             {
                 canMove = false; // Disable movement
                 StopMovement(); // Stop movement when panel is active
+
+                // Pause the timer
+                if (timerScript != null)
+                {
+                    timerScript.PauseTimer();
+                }
             }
             else
             {
                 canMove = true; // Enable movement when panel is inactive
+
+                // Resume the timer
+                if (timerScript != null)
+                {
+                    timerScript.ResumeTimer();
+                }
             }
         }
     }
