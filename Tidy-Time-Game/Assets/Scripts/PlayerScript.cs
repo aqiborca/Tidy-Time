@@ -13,28 +13,37 @@ public class PlayerScript : MonoBehaviour
     public float acceleration;
     public float deceleration;
     public Rigidbody2D playerRigidBody;
+    public GameObject escPanel; // Reference to the ESC Panel
     private Vector2 moveDirection;
     private Vector2 currentVelocity = Vector2.zero;
 
     // Get player position when loading scene
     private void OnEnable()
     {
-        
         GetPlayerPosition();
     }
+
     // Set player position when changing scene
     private void OnDisable()
     {
         SetPlayerPosition();
     }
+
     // Update is called once per frame
     void Update()
     {
         if (enabled) // Only process inputs if the script is enabled
         {
             ProcessInputs();
+
+            // Check if ESC key is pressed
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ToggleEscPanel();
+            }
         }
     }
+
     void FixedUpdate()
     {
         if (enabled) // Only move if the script is enabled
@@ -42,6 +51,7 @@ public class PlayerScript : MonoBehaviour
             Move();
         }
     }
+
     // Inputs for player movement
     void ProcessInputs()
     {
@@ -49,6 +59,7 @@ public class PlayerScript : MonoBehaviour
         float moveY = Input.GetAxisRaw("Vertical");
         moveDirection = new Vector2(moveX, moveY).normalized;
     }
+
     // Player movement
     void Move()
     {
@@ -63,6 +74,7 @@ public class PlayerScript : MonoBehaviour
 
         playerRigidBody.velocity = currentVelocity;
     }
+
     // Player Position Setter
     private void SetPlayerPosition()
     {
@@ -72,6 +84,7 @@ public class PlayerScript : MonoBehaviour
             DataManager.Instance.SetPlayerPosition(transform.position);
         }
     }
+
     // Player Position Getter
     private void GetPlayerPosition()
     {
@@ -82,10 +95,32 @@ public class PlayerScript : MonoBehaviour
             transform.position = savedPosition;
         }
     }
+
     // Method to stop movement
     public void StopMovement()
     {
         playerRigidBody.velocity = Vector2.zero; // Reset velocity
         moveDirection = Vector2.zero; // Clear movement input
+    }
+
+    // Method to toggle the ESC Panel
+    public void ToggleEscPanel()
+    {
+        if (escPanel != null)
+        {
+            bool isPanelActive = !escPanel.activeSelf;
+            escPanel.SetActive(isPanelActive);
+
+            // Stop or resume player movement
+            if (isPanelActive)
+            {
+                StopMovement(); // Stop movement when panel is active
+            }
+            else
+            {
+                // Resume movement when panel is inactive
+                // No need to explicitly resume movement since the script is enabled
+            }
+        }
     }
 }
