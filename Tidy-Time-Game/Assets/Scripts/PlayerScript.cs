@@ -16,6 +16,7 @@ public class PlayerScript : MonoBehaviour
     public GameObject escPanel; // Reference to the ESC Panel
     private Vector2 moveDirection;
     private Vector2 currentVelocity = Vector2.zero;
+    private bool canMove = true; // Flag to control movement
 
     // Get player position when loading scene
     private void OnEnable()
@@ -32,21 +33,21 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enabled) // Only process inputs if the script is enabled
+        if (enabled && canMove) // Only process inputs if the script is enabled and movement is allowed
         {
             ProcessInputs();
+        }
 
-            // Check if ESC key is pressed
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ToggleEscPanel();
-            }
+        // Check if ESC key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleEscPanel();
         }
     }
 
     void FixedUpdate()
     {
-        if (enabled) // Only move if the script is enabled
+        if (enabled && canMove) // Only move if the script is enabled and movement is allowed
         {
             Move();
         }
@@ -101,6 +102,7 @@ public class PlayerScript : MonoBehaviour
     {
         playerRigidBody.velocity = Vector2.zero; // Reset velocity
         moveDirection = Vector2.zero; // Clear movement input
+        currentVelocity = Vector2.zero; // Reset current velocity
     }
 
     // Method to toggle the ESC Panel
@@ -114,12 +116,12 @@ public class PlayerScript : MonoBehaviour
             // Stop or resume player movement
             if (isPanelActive)
             {
+                canMove = false; // Disable movement
                 StopMovement(); // Stop movement when panel is active
             }
             else
             {
-                // Resume movement when panel is inactive
-                // No need to explicitly resume movement since the script is enabled
+                canMove = true; // Enable movement when panel is inactive
             }
         }
     }
