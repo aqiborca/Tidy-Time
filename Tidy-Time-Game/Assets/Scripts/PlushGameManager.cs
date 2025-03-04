@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlushGameManager : MonoBehaviour
 {
     public static PlushGameManager Instance;
-    public Transform[] correctHeadPositions;
-    public Transform[] heads;
+    public Transform[] correctHeadPositions; 
+    public PlushHeadSwap[] heads; 
 
     private void Awake()
     {
@@ -15,14 +15,16 @@ public class PlushGameManager : MonoBehaviour
             Instance = this;
         }
     }
-    
+
     public void CheckTaskCompletion()
     {
         bool allCorrect = true;
+        float snapThreshold = 0.2f; 
 
         for (int i = 0; i < heads.Length; i++)
         {
-            if (heads[i].position != correctHeadPositions[i].position)
+            
+            if (Vector3.Distance(heads[i].transform.position, correctHeadPositions[i].position) > snapThreshold)
             {
                 allCorrect = false;
                 break;
@@ -34,11 +36,14 @@ public class PlushGameManager : MonoBehaviour
             Debug.Log("All plushies matched correctly");
             Invoke("ReturnToBedroom", 2f);
         }
+        else
+        {
+            Debug.Log("Not all plushies are in the correct spots.");
+        }
     }
 
     void ReturnToBedroom()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Bedroom");
     }
-   
 }
