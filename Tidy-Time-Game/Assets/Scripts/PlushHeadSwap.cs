@@ -1,3 +1,6 @@
+//Note to self: TO DO -   figure out a way to implement detection of the right placement properly, work in progress.
+
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -129,4 +132,6 @@ public class PlushHeadSwap : MonoBehaviour
         //Check if the overall game task is completed after swapping.
         PlushGameManager.Instance.CheckTaskCompletion();
     }
+
+    
 }
