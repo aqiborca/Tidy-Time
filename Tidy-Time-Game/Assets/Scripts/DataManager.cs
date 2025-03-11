@@ -9,6 +9,8 @@ public class DataManager : MonoBehaviour
     // Variables
     public static DataManager Instance { get; private set; }
     public Vector3 playerPosition;
+    public int currentHour = 6;  // Default time at 6 PM
+    public int currentMinute = 0;
 
     private void Awake()
     {
@@ -34,5 +36,18 @@ public class DataManager : MonoBehaviour
     public Vector3 GetPlayerPosition()
     {
         return playerPosition;
+    }
+
+    // Time Setter
+    public void SetTime(int hour, int minute)
+    {
+        currentHour = hour;
+        currentMinute = minute;
+    }
+
+    // Time Getter
+    public (int, int) GetTime()
+    {
+        return (currentHour, currentMinute);
     }
 }

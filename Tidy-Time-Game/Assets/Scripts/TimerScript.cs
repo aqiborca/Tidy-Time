@@ -49,7 +49,7 @@ public class TimerScript : MonoBehaviour
                     Debug.Log("Timer stopped at 8:00 PM.");
                 }
 
-                // Update the text
+                // Update text
                 UpdateTimeText();
             }
             else
@@ -59,21 +59,39 @@ public class TimerScript : MonoBehaviour
         }
     }
 
-    // Update the text to display the current time
-    private void UpdateTimeText()
+    // Returns the current hour (used for saving)
+    public int GetCurrentHour()
     {
-        string period = "PM"; // Since we're starting at 6 PM
-        string minuteString = currentMinute.ToString("00"); // Ensure 2-digit format
-        timeText.text = $"{currentHour}:{minuteString} {period}";
+        return currentHour;
     }
 
-    // Method to pause the timer
+    // Returns the current minute (used for saving)
+    public int GetCurrentMinute()
+    {
+        return currentMinute;
+    }
+
+    // Sets the timer to a saved time (used when loading a scene)
+    public void SetTime(int hour, int minute)
+    {
+        currentHour = hour;
+        currentMinute = minute;
+        UpdateTimeText();
+    }
+
+    // Updates the UI text with the current time
+    private void UpdateTimeText()
+    {
+        timeText.text = $"{currentHour}:{currentMinute:D2} PM";
+    }
+
+    // Pauses the timer
     public void PauseTimer()
     {
         isPaused = true;
     }
 
-    // Method to resume the timer
+    // Resumes the timer
     public void ResumeTimer()
     {
         isPaused = false;

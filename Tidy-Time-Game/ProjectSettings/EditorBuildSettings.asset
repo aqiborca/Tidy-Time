@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: 3dfa5310b1f0c3649a644c6413016a39
   - enabled: 1
+    path: Assets/Scenes/Slides Opening.unity
+    guid: 9959a8d7a6797874983d31b690f52f79
+  - enabled: 1
     path: Assets/Scenes/Bedroom.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
@@ -20,6 +23,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Chore Plushies.unity
     guid: 2c5aa828e113fc042abc26301d709e83
+  - enabled: 1
+    path: Assets/Scenes/Chore Soup.unity
+    guid: 60fd59b8abd3dda4cb38251df1a990be
+  - enabled: 1
+    path: Assets/Scenes/Chore Closet.unity
+    guid: 576b112acfabf2f4ead8a3fa70c1f676
+  - enabled: 1
+    path: Assets/Scenes/Under Bed.unity
+    guid: ace8d8aee1498c24cb7637bee6ac4d49
   - enabled: 1
     path: Assets/Scenes/Call Mom.unity
     guid: 75f55a389ad8fb44cbfa0a61a8c661a5

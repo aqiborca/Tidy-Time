@@ -19,16 +19,18 @@ public class PlayerScript : MonoBehaviour
     private Vector2 currentVelocity = Vector2.zero;
     private bool canMove = true; // Flag to control movement
 
-    // Get player position when loading scene
+    // Get player position and time when loading scene
     private void OnEnable()
     {
         GetPlayerPosition();
+        GetSavedTime();
     }
 
-    // Set player position when changing scene
+    // Set player position and time when changing scene
     private void OnDisable()
     {
         SetPlayerPosition();
+        SaveCurrentTime();
     }
 
     // Update is called once per frame
@@ -95,6 +97,25 @@ public class PlayerScript : MonoBehaviour
         {
             Vector3 savedPosition = DataManager.Instance.GetPlayerPosition();
             transform.position = savedPosition;
+        }
+    }
+
+    // Save the current time before changing scenes
+    private void SaveCurrentTime()
+    {
+        if (DataManager.Instance != null && timerScript != null)
+        {
+            DataManager.Instance.SetTime(timerScript.GetCurrentHour(), timerScript.GetCurrentMinute());
+        }
+    }
+
+    // Load the saved time when entering a new scene
+    private void GetSavedTime()
+    {
+        if (DataManager.Instance != null && timerScript != null)
+        {
+            (int savedHour, int savedMinute) = DataManager.Instance.GetTime();
+            timerScript.SetTime(savedHour, savedMinute);
         }
     }
 
