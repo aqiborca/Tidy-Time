@@ -9,7 +9,7 @@ using System.Collections;
 public class TimerScript : MonoBehaviour
 {
     public TextMeshProUGUI timeText; // Reference to the TextMeshProUGUI component
-    private int currentHour = 6;     // Start at 6 PM
+    private int currentHour = 4;     // Start at 4 PM
     private int currentMinute = 0;   // Start at 0 minutes
     private int currentSecond = 0;   // Start at 0 seconds
     private bool isRunning = true;   // Flag to control the timer
@@ -45,7 +45,7 @@ public class TimerScript : MonoBehaviour
             return;
         }
 
-        // Initialize the text to "6:00:00 PM"
+        // Initialize the text to "4:00:00 PM"
         UpdateTimeText();
 
         // Start the timer coroutine
@@ -75,10 +75,10 @@ public class TimerScript : MonoBehaviour
                 }
 
                 // Stop the timer if it reaches 8:00:00 PM
-                if (currentHour >= 8 && currentMinute >= 0 && currentSecond >= 0)
+                if (currentHour >= 9 && currentMinute >= 0 && currentSecond >= 0)
                 {
                     isRunning = false;
-                    Debug.Log("Timer stopped at 8:00:00 PM.");
+                    Debug.Log("Timer stopped at 9:00:00 PM.");
                 }
 
                 // Update the UI text

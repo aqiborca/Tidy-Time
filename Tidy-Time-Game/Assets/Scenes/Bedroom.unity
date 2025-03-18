@@ -373,7 +373,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &30687009
 Transform:
   m_ObjectHideFlags: 0
@@ -4541,7 +4541,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 6:00:00 PM
+  m_text: 4:00:00 PM
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc3619375be8c6d40977000abaa6d99a, type: 2}
   m_sharedMaterial: {fileID: 5269888180121808372, guid: dc3619375be8c6d40977000abaa6d99a, type: 2}
