@@ -1,6 +1,6 @@
 /*
-This class detects if a player is inside of a prop collider and allows them to press the respective button
-Attached to: Player Object
+This script is for player movement, inputs, esc panel, and timer
+Attached to: Player
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -105,7 +105,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (DataManager.Instance != null && timerScript != null)
         {
-            DataManager.Instance.SetTime(timerScript.GetCurrentHour(), timerScript.GetCurrentMinute());
+            DataManager.Instance.SetTime(timerScript.GetCurrentHour(), timerScript.GetCurrentMinute(), timerScript.GetCurrentSecond());
         }
     }
 
@@ -114,8 +114,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (DataManager.Instance != null && timerScript != null)
         {
-            (int savedHour, int savedMinute) = DataManager.Instance.GetTime();
-            timerScript.SetTime(savedHour, savedMinute);
+            var savedTime = DataManager.Instance.GetTime();
+            timerScript.SetTime(savedTime.Item1, savedTime.Item2, savedTime.Item3);
         }
     }
 
@@ -140,22 +140,10 @@ public class PlayerScript : MonoBehaviour
             {
                 canMove = false; // Disable movement
                 StopMovement(); // Stop movement when panel is active
-
-                // Pause the timer
-                if (timerScript != null)
-                {
-                    timerScript.PauseTimer();
-                }
             }
             else
             {
                 canMove = true; // Enable movement when panel is inactive
-
-                // Resume the timer
-                if (timerScript != null)
-                {
-                    timerScript.ResumeTimer();
-                }
             }
         }
     }

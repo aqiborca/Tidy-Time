@@ -11,6 +11,7 @@ public class DataManager : MonoBehaviour
     public Vector3 playerPosition;
     public int currentHour = 6;  // Default time at 6 PM
     public int currentMinute = 0;
+    public int currentSecond = 0; // Added seconds
 
     private void Awake()
     {
@@ -39,15 +40,16 @@ public class DataManager : MonoBehaviour
     }
 
     // Time Setter
-    public void SetTime(int hour, int minute)
+    public void SetTime(int hour, int minute, int second)
     {
         currentHour = hour;
         currentMinute = minute;
+        currentSecond = second;
     }
 
     // Time Getter
-    public (int, int) GetTime()
+    public (int, int, int) GetTime()
     {
-        return (currentHour, currentMinute);
+        return (currentHour, currentMinute, currentSecond);
     }
 }

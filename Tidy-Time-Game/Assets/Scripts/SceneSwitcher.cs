@@ -99,7 +99,7 @@ public class SceneSwitcher : MonoBehaviour
         TimerScript timer = FindObjectOfType<TimerScript>();
         if (timer != null)
         {
-            DataManager.Instance.SetTime(timer.GetCurrentHour(), timer.GetCurrentMinute());
+            DataManager.Instance.SetTime(timer.GetCurrentHour(), timer.GetCurrentMinute(), timer.GetCurrentSecond());
         }
     }
 }

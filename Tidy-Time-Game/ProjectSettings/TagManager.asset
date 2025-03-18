@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlushBody
   - PlushHead
+  - Timer
   layers:
   - Default
   - TransparentFX
