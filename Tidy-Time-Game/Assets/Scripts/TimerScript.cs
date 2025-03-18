@@ -59,10 +59,10 @@ public class TimerScript : MonoBehaviour
         {
             if (!isPaused) // Only update the timer if it's not paused
             {
-                yield return new WaitForSeconds(0.5f); // Wait for 0.5 second
+                yield return new WaitForSeconds(0.015f); // Wait for 0.5 second
 
                 // Increment the time by 30 seconds
-                currentSecond += 30;
+                currentSecond ++;
                 if (currentSecond >= 60)
                 {
                     currentSecond = 0;
