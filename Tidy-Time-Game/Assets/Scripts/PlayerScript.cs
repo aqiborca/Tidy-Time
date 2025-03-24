@@ -68,6 +68,12 @@ public class PlayerScript : MonoBehaviour
         // Set isWalking parameter based on player movement
         bool isWalking = moveDirection.magnitude > 0;
         animator.SetBool("isWalking", isWalking); // Set the isWalking parameter in the animator
+
+        // Log when the player starts walking
+        if (isWalking)
+        {
+            Debug.Log("Player is walking.");
+        }
     }
 
     // Player movement

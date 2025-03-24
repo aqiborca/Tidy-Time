@@ -10,7 +10,6 @@ public class InventoryManager : MonoBehaviour
     public InventorySlot[] inventorySlots;
     public GameObject inventoryItemPrefab;
 
-
     private void Awake()
     {
         // if an instance already exists and it isn't this, destroy the new one
@@ -21,11 +20,17 @@ public class InventoryManager : MonoBehaviour
         }
 
         instance = this;
+
+        // Ensure this GameObject is a root GameObject
+        if (transform.parent != null)
+        {
+            Debug.LogWarning("InventoryManager is not a root GameObject. Moving to root level.");
+            transform.SetParent(null); // Move to root level
+        }
+
         // make sure this object is not destroyed when loading a new scene
         DontDestroyOnLoad(gameObject);
     }
-
-
 
     public bool AddItem(Item item)
     {
@@ -63,6 +68,4 @@ public class InventoryManager : MonoBehaviour
         InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
         inventoryItem.InitialiseItem(item);
     }
-
-    
 }
