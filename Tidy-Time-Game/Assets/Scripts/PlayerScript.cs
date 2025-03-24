@@ -1,7 +1,3 @@
-/*
-This script is for player movement, inputs, esc panel, and timer
-Attached to: Player
-*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +14,12 @@ public class PlayerScript : MonoBehaviour
     private Vector2 moveDirection;
     private Vector2 currentVelocity = Vector2.zero;
     private bool canMove = true; // Flag to control movement
+    Animator animator;
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     // Get player position and time when loading scene
     private void OnEnable()
@@ -62,6 +64,10 @@ public class PlayerScript : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
         moveDirection = new Vector2(moveX, moveY).normalized;
+
+        // Set isWalking parameter based on player movement
+        bool isWalking = moveDirection.magnitude > 0;
+        animator.SetBool("isWalking", isWalking); // Set the isWalking parameter in the animator
     }
 
     // Player movement
