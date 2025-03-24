@@ -294,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5031e63d42dedd544b210e14b280698e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  correctBody: {fileID: 1070008791}
 --- !u!1 &37475831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1113,6 +1114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5031e63d42dedd544b210e14b280698e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  correctBody: {fileID: 1808931067}
 --- !u!1 &1070008790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1652,6 +1654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5031e63d42dedd544b210e14b280698e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  correctBody: {fileID: 118648188}
 --- !u!1 &1492536465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1663,7 +1666,7 @@ GameObject:
   - component: {fileID: 1492536467}
   - component: {fileID: 1492536466}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: PlushGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1681,11 +1684,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c2f4d8564975847a4b1ccdf5ee428b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  correctHeadPositions:
-  - {fileID: 1656842280}
-  - {fileID: 27736391}
-  - {fileID: 988421799}
-  - {fileID: 1447722192}
   heads:
   - {fileID: 27736395}
   - {fileID: 1447722196}
@@ -1877,6 +1875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5031e63d42dedd544b210e14b280698e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  correctBody: {fileID: 37475832}
 --- !u!1 &1775750565
 GameObject:
   m_ObjectHideFlags: 0
