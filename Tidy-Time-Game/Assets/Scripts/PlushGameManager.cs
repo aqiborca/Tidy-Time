@@ -35,6 +35,16 @@ public class PlushGameManager : MonoBehaviour
         if (allCorrect)
         {
             Debug.Log("All plushies matched correctly");
+
+            Debug.Log("All plushies matched correctly!");
+
+            //mark the plushie swap as completed
+            ChoreManager choreManager = FindObjectOfType<ChoreManager>();
+            if (choreManager != null)
+            {
+                choreManager.CompleteChore("SwapPlushies");
+            }
+
         }
     }
 
