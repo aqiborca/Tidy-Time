@@ -15,10 +15,12 @@ public class PlayerScript : MonoBehaviour
     private Vector2 currentVelocity = Vector2.zero;
     private bool canMove = true; // Flag to control movement
     Animator animator;
+    private Vector3 originalScale; // Store the original scale of the sprite
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        originalScale = transform.localScale; // Store the initial scale
     }
 
     // Get player position and time when loading scene
@@ -69,10 +71,19 @@ public class PlayerScript : MonoBehaviour
         bool isWalking = moveDirection.magnitude > 0;
         animator.SetBool("isWalking", isWalking); // Set the isWalking parameter in the animator
 
-        // Log when the player starts walking
+        // Flip sprite based on horizontal movement direction
+        if (moveX > 0) // Moving right
+        {
+            transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
+        }
+        else if (moveX < 0) // Moving left
+        {
+            transform.localScale = new Vector3(-originalScale.x, originalScale.y, originalScale.z);
+        }
+
         if (isWalking)
         {
-            Debug.Log("Player is walking.");
+            //Type here
         }
     }
 

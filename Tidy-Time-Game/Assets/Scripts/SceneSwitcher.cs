@@ -61,18 +61,25 @@ public class SceneSwitcher : MonoBehaviour
         SceneManager.LoadSceneAsync(7);
     }
 
-    public void PlayUnderBed()
+    public void PlayGarbage()
     {
         SetPlayerPosition();
         SaveTime();
         SceneManager.LoadSceneAsync(8);
     }
 
-    public void CallMom()
+    public void PlayUnderBed()
     {
         SetPlayerPosition();
         SaveTime();
         SceneManager.LoadSceneAsync(9);
+    }
+
+    public void CallMom()
+    {
+        SetPlayerPosition();
+        SaveTime();
+        SceneManager.LoadSceneAsync(10);
     }
 
     public void LoadMainMenu()

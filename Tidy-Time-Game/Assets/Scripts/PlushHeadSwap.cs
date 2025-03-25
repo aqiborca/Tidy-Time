@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class PlushHeadSwap : MonoBehaviour
 {
-    //stores the head’s last valid (snapped) position
+    //stores the headï¿½s last valid (snapped) position
     private Vector3 startPosition;
     //holds the offset between the head's position and the mouse click point
     private Vector3 dragOffset;

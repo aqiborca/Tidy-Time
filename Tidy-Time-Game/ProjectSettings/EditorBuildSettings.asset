@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Chore Closet.unity
     guid: 576b112acfabf2f4ead8a3fa70c1f676
   - enabled: 1
+    path: Assets/Scenes/Chore Garbage.unity
+    guid: 91f58c5472eb76547aabc521d75e7904
+  - enabled: 1
     path: Assets/Scenes/Under Bed.unity
     guid: ace8d8aee1498c24cb7637bee6ac4d49
   - enabled: 1
