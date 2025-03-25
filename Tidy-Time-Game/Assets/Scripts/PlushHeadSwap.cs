@@ -15,10 +15,20 @@ public class PlushHeadSwap : MonoBehaviour
     //flag for whether this head is currently being dragged
     private bool isDragging = false;
 
+    public Transform correctBody;
+
     void Start()
     {
         //store initial position as the valid body attachment position
         startPosition = transform.position;
+
+        //retrieve saved position if it exists
+        if (SaveManager.Instance != null)
+        {
+            Vector3 savedPosition = SaveManager.Instance.GetPlushiePosition(gameObject.name, startPosition);
+            transform.position = savedPosition;
+            startPosition = savedPosition;
+        }
     }
 
     private void OnMouseDown()
@@ -111,6 +121,12 @@ public class PlushHeadSwap : MonoBehaviour
             //if no valid colliders are detected, reset to the last valid position
             transform.position = startPosition;
         }
+
+        //save the new position to SaveManager
+        if (SaveManager.Instance != null)
+        {
+            SaveManager.Instance.SavePlushiePosition(gameObject.name, transform.position);
+        }
     }
 
     private void SwapHeads(PlushHeadSwap otherHead)
@@ -127,11 +143,24 @@ public class PlushHeadSwap : MonoBehaviour
             //snap each head to its new valid position
             transform.position = startPosition;
             otherHead.transform.position = otherHead.startPosition;
+
+            //save updated positions
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.SavePlushiePosition(gameObject.name, transform.position);
+                SaveManager.Instance.SavePlushiePosition(otherHead.gameObject.name, otherHead.transform.position);
+            }
         }
 
         //Check if the overall game task is completed after swapping.
         PlushGameManager.Instance.CheckTaskCompletion();
     }
 
-    
+    //check if this head is correctly placed on its matching body
+    public bool IsCorrectlyPlaced()
+    {
+        float snapThreshold = 0.2f;
+        return Vector3.Distance(transform.position, correctBody.position) < snapThreshold;
+    }
+
 }
