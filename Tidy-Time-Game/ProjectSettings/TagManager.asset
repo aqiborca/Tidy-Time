@@ -8,6 +8,9 @@ TagManager:
   - PlushHead
   - Timer
   - LetterPlaceholder
+  - HangerZone
+  - SideShelfZone
+  - TopShelfZone
   layers:
   - Default
   - TransparentFX
