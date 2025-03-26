@@ -1,41 +1,95 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class LetterPlaceholder : MonoBehaviour, IDropHandler
+[RequireComponent(typeof(Image))]
+public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public void OnDrop(PointerEventData eventData)
+    private static bool isAnyDragActive;
+    private static DraggableLetter currentDraggedLetter;
+    private CanvasGroup existingLetterCanvasGroup;
+
+    private void Awake()
     {
-        GameObject droppedLetter = eventData.pointerDrag;
+        // Disable placeholder image visuals
+        GetComponent<Image>().enabled = false;
+    }
 
-        if (droppedLetter != null)
+    public static void OnDragStarted(DraggableLetter letter)
+    {
+        isAnyDragActive = true;
+        currentDraggedLetter = letter;
+    }
+
+    public static void OnDragEnded()
+    {
+        if (currentDraggedLetter != null)
         {
-            DraggableLetter draggableLetter = droppedLetter.GetComponent<DraggableLetter>();
-
-            if (draggableLetter != null)
+            currentDraggedLetter.canvasGroup.alpha = 1f;
+        }
+        
+        isAnyDragActive = false;
+        currentDraggedLetter = null;
+        
+        // Restore any faded letters
+        foreach (var placeholder in FindObjectsOfType<LetterPlaceholder>())
+        {
+            if (placeholder.existingLetterCanvasGroup != null)
             {
-                // Set the letter's position to the placeholder's position
-                droppedLetter.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
-
-                // Check if the letter is in the correct place
-                if (IsCorrectPlaceholder(droppedLetter))
-                {
-                    draggableLetter.isCorrectlyPlaced = true;
-                    draggableLetter.OnCorrectPlacement();
-                }
-                else
-                {
-                    draggableLetter.isCorrectlyPlaced = false;
-                    draggableLetter.OnIncorrectPlacement();
-                }
+                placeholder.existingLetterCanvasGroup.alpha = 1f;
             }
         }
     }
 
-    // Placeholder logic to check if this placeholder is the correct one for the letter
-    private bool IsCorrectPlaceholder(GameObject droppedLetter)
+    public void OnDrop(PointerEventData eventData)
     {
-        // Implement the logic to check if the letter matches the correct placeholder
-        // For example, you can check the name or tag of the letter and compare it with the placeholder
-        return droppedLetter.name == gameObject.name;  // Example check
+        if (!isAnyDragActive || currentDraggedLetter == null) return;
+        
+        // Reset transparency of existing letter
+        if (existingLetterCanvasGroup != null)
+        {
+            existingLetterCanvasGroup.alpha = 1f;
+        }
+
+        // If this placeholder has a letter, swap them
+        if (transform.childCount > 0)
+        {
+            DraggableLetter existingLetter = transform.GetChild(0).GetComponent<DraggableLetter>();
+            
+            existingLetter.transform.SetParent(currentDraggedLetter.startParent);
+            existingLetter.rectTransform.anchoredPosition = currentDraggedLetter.startPosition;
+            existingLetter.startParent = currentDraggedLetter.startParent;
+            existingLetter.startPosition = currentDraggedLetter.startPosition;
+            existingLetter.isCorrectlyPlaced = false;
+        }
+
+        // Place dragged letter in this placeholder
+        currentDraggedLetter.transform.SetParent(transform);
+        currentDraggedLetter.rectTransform.anchoredPosition = Vector3.zero;
+        currentDraggedLetter.startParent = transform;
+        currentDraggedLetter.startPosition = Vector3.zero;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // Make existing letter transparent when hovered during drag
+        if (isAnyDragActive && transform.childCount > 0)
+        {
+            existingLetterCanvasGroup = transform.GetChild(0).GetComponent<CanvasGroup>();
+            if (existingLetterCanvasGroup != null)
+            {
+                existingLetterCanvasGroup.alpha = 0.5f;
+            }
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // Restore existing letter's opacity
+        if (existingLetterCanvasGroup != null)
+        {
+            existingLetterCanvasGroup.alpha = 1f;
+            existingLetterCanvasGroup = null;
+        }
     }
 }

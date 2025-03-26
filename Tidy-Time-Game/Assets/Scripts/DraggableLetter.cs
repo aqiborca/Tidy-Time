@@ -3,12 +3,11 @@ using UnityEngine.EventSystems;
 
 public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private RectTransform rectTransform;
-    private Canvas canvas;
-    private CanvasGroup canvasGroup;
-    private Vector2 startPosition;
-
-    // You can add a variable for the correct placeholder here if needed
+    [HideInInspector] public RectTransform rectTransform;
+    [HideInInspector] public Canvas canvas;
+    [HideInInspector] public CanvasGroup canvasGroup;
+    public Vector2 startPosition;
+    public Transform startParent;
     public bool isCorrectlyPlaced = false;
 
     private void Awake()
@@ -19,48 +18,43 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         if (canvasGroup == null)
         {
-            Debug.LogError("CanvasGroup is missing on " + gameObject.name + ". Please add it.");
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (isCorrectlyPlaced) return;
+        
         startPosition = rectTransform.anchoredPosition;
-        canvasGroup.alpha = 0.6f;
+        startParent = transform.parent;
         canvasGroup.blocksRaycasts = false;
+        
+        LetterPlaceholder.OnDragStarted(this);
+        transform.SetParent(canvas.transform);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (isCorrectlyPlaced) return;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
+        LetterPlaceholder.OnDragEnded();
 
-        // When dragging ends, check if it's correctly placed
-        if (isCorrectlyPlaced)
+        if (transform.parent == canvas.transform)
         {
-            OnCorrectPlacement();
-        }
-        else
-        {
-            OnIncorrectPlacement();
+            ReturnToStartPosition();
         }
     }
 
-    // Make these methods public so they can be accessed from other scripts
-    public void OnCorrectPlacement()
+    public void ReturnToStartPosition()
     {
-        Debug.Log("Letter placed correctly!");
-        // Call additional code to mark the chore as completed if needed
-    }
-
-    public void OnIncorrectPlacement()
-    {
-        rectTransform.anchoredPosition = startPosition;  // Snap back to the original position
-        Debug.Log("Letter placed incorrectly!");
+        transform.SetParent(startParent);
+        rectTransform.anchoredPosition = startPosition;
+        isCorrectlyPlaced = false;
     }
 }
