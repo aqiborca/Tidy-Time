@@ -82,6 +82,11 @@ public class SceneSwitcher : MonoBehaviour
         SceneManager.LoadSceneAsync(10);
     }
 
+    public void LoadCredits()
+    {
+        SceneManager.LoadSceneAsync(11);
+    }
+
     public void LoadMainMenu()
     {
         SceneManager.LoadSceneAsync(0);
