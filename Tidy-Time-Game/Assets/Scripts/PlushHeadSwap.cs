@@ -1,27 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class PlushHeadSwap : MonoBehaviour
 {
-    //stores the head's last valid (snapped) position
     private Vector3 startPosition;
-    //holds the offset between the head's position and the mouse click point
     private Vector3 dragOffset;
-    //flag for whether this head is currently being dragged
     private bool isDragging = false;
-    
     private bool isLocked = false;
+    private Color originalColor;
+    private SpriteRenderer spriteRenderer;
+    private PolygonCollider2D polyCollider;
 
     public Transform correctBody;
+    public float snapThreshold = 0.5f;
+    public float lockThreshold = 0.3f;
+    public float hoverAlpha = 0.6f;
 
     void Start()
     {
-        //store initial position as the valid body attachment position
         startPosition = transform.position;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+        polyCollider = GetComponent<PolygonCollider2D>();
 
-        //retrieve saved position if it exists
         if (SaveManager.Instance != null)
         {
             Vector3 savedPosition = SaveManager.Instance.GetPlushiePosition(gameObject.name, startPosition);
@@ -29,7 +31,6 @@ public class PlushHeadSwap : MonoBehaviour
             startPosition = savedPosition;
         }
         
-        // Check if we start in the correct position
         CheckAndUpdateLockStatus();
     }
 
@@ -37,106 +38,146 @@ public class PlushHeadSwap : MonoBehaviour
     {
         if (isLocked) return;
 
-        UnityEngine.Debug.Log(gameObject.name + " clicked");  //had some issues with click detection - fixed now, leaving debug log just in case
         isDragging = true;
-        //calculate the offset between the head position and the mouse's position
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //keep Z position at 0
-        mouseWorldPos.z = 0;
+        mouseWorldPos.z = transform.position.z;
         dragOffset = transform.position - mouseWorldPos;
     }
 
     private void OnMouseDrag()
     {
-        if (isDragging)
+        if (isDragging && !isLocked)
         {
-            if (isLocked || !isDragging) return;
-
-            //get the current mouse position
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePosition.z = 0;
-            //apply offset so the head doesn't "jump"
+            mousePosition.z = transform.position.z;
             transform.position = mousePosition + dragOffset;
+
+            CheckForHoveredHeads();
+        }
+    }
+
+    private void CheckForHoveredHeads()
+    {
+        PlushHeadSwap[] allHeads = FindObjectsOfType<PlushHeadSwap>();
+        Vector2 currentPos = transform.position;
+        
+        foreach (PlushHeadSwap head in allHeads)
+        {
+            if (head != this && !head.isDragging && head.polyCollider != null)
+            {
+                // Convert position to the head's local space
+                Vector2 point = head.transform.InverseTransformPoint(currentPos);
+                
+                // Precise point-in-polygon check
+                if (head.polyCollider.OverlapPoint(currentPos))
+                {
+                    head.SetTransparency(hoverAlpha);
+                }
+                else
+                {
+                    head.ResetTransparency();
+                }
+            }
+            else
+            {
+                head.ResetTransparency();
+            }
         }
     }
 
     private void OnMouseUp()
     {
         if (isLocked) return;
-
+        
+        ResetAllHeadsTransparency();
         isDragging = false;
 
-        //get the head's collider to use its bounds
-        Collider2D myCollider = GetComponent<Collider2D>();
-        //use OverlapBoxAll with collider's center and size
-        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(myCollider.bounds.center, myCollider.bounds.size, 0f);
-
+        // Precise collision detection using poly collider
         PlushHeadSwap targetHead = null;
         Collider2D targetBody = null;
 
-        //look through all overlapping colliders
-        foreach (Collider2D col in hitColliders)
+        // Check for heads first
+        PlushHeadSwap[] allHeads = FindObjectsOfType<PlushHeadSwap>();
+        foreach (PlushHeadSwap head in allHeads)
         {
-            //if another head is found, mark it as the target.
-            if (col.CompareTag("PlushHead") && col.gameObject != gameObject)
+            if (head != this && !head.isDragging && head.polyCollider != null)
             {
-                targetHead = col.GetComponent<PlushHeadSwap>();
-                break; //give swapping priority
+                if (head.polyCollider.OverlapPoint(transform.position))
+                {
+                    targetHead = head;
+                    break;
+                }
             }
-            //if a body is found, record it
-            else if (col.CompareTag("PlushBody"))
+        }
+
+        // If no head found, check for bodies
+        if (targetHead == null)
+        {
+            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, snapThreshold);
+            foreach (Collider2D col in hitColliders)
             {
-                targetBody = col;
+                if (col.CompareTag("PlushBody"))
+                {
+                    targetBody = col;
+                    break;
+                }
             }
         }
 
         if (targetHead != null)
         {
-            //swap directly if a head is detected
             SwapHeads(targetHead);
         }
         else if (targetBody != null)
         {
-            //use a threshold to determine if a head is already attached to specific body
-            float snapThreshold = 0.3f; //adjust as needed
-            PlushHeadSwap attachedHead = null;
-
-            //search through all heads to find one that is currently snapped to this body
-            foreach (PlushHeadSwap head in FindObjectsOfType<PlushHeadSwap>())
+            if (targetBody.transform == correctBody)
             {
-                if (head != this && Vector3.Distance(head.startPosition, targetBody.transform.position) < snapThreshold)
-                {
-                    attachedHead = head;
-                    break;
-                }
-            }
-
-            if (attachedHead != null)
-            {
-                //if there is already a head on this body, swap with that head
-                SwapHeads(attachedHead);
+                transform.position = correctBody.position;
+                startPosition = correctBody.position;
             }
             else
             {
-                //snap this head to the body's position and update the stored valid position
                 transform.position = targetBody.transform.position;
                 startPosition = targetBody.transform.position;
             }
         }
         else
         {
-            UnityEngine.Debug.Log("Dropped outside valid area, resetting.");
-            //if no valid colliders are detected, reset to the last valid position
             transform.position = startPosition;
         }
 
-        // Check if we're still in the correct position after moving
         CheckAndUpdateLockStatus();
 
-        //save the new position to SaveManager
         if (SaveManager.Instance != null)
         {
             SaveManager.Instance.SavePlushiePosition(gameObject.name, transform.position);
+        }
+    }
+
+    private void ResetAllHeadsTransparency()
+    {
+        PlushHeadSwap[] allHeads = FindObjectsOfType<PlushHeadSwap>();
+        foreach (PlushHeadSwap head in allHeads)
+        {
+            head.ResetTransparency();
+        }
+    }
+
+    public void SetTransparency(float alpha)
+    {
+        if (spriteRenderer != null)
+        {
+            Color newColor = originalColor;
+            newColor.a = alpha;
+            spriteRenderer.color = newColor;
+        }
+    }
+
+    public void ResetTransparency()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = originalColor;
         }
     }
 
@@ -144,22 +185,16 @@ public class PlushHeadSwap : MonoBehaviour
     {
         if (otherHead != null && otherHead != this)
         {
-            UnityEngine.Debug.Log("Swapping " + gameObject.name + " with " + otherHead.gameObject.name);
-
-            //swap the stored valid positions
             Vector3 tempPosition = startPosition;
             startPosition = otherHead.startPosition;
             otherHead.startPosition = tempPosition;
 
-            //snap each head to its new valid position
             transform.position = startPosition;
             otherHead.transform.position = otherHead.startPosition;
 
-            // Check lock status for both heads after swapping
             CheckAndUpdateLockStatus();
             otherHead.CheckAndUpdateLockStatus();
 
-            //save updated positions
             if (SaveManager.Instance != null)
             {
                 SaveManager.Instance.SavePlushiePosition(gameObject.name, transform.position);
@@ -167,31 +202,26 @@ public class PlushHeadSwap : MonoBehaviour
             }
         }
 
-        //Check if the overall game task is completed after swapping.
         PlushGameManager.Instance.CheckTaskCompletion();
     }
 
-    // New method to check and update lock status
     private void CheckAndUpdateLockStatus()
     {
-        float snapThreshold = 0.2f;
-        bool shouldBeLocked = Vector3.Distance(transform.position, correctBody.position) < snapThreshold;
+        float distance = Vector3.Distance(transform.position, correctBody.position);
+        bool shouldBeLocked = distance < lockThreshold;
 
         if (shouldBeLocked && !isLocked)
         {
-            isLocked = true;
-            transform.position = correctBody.position; // Snap exactly to the body
+            transform.position = correctBody.position;
             startPosition = correctBody.position;
-            UnityEngine.Debug.Log(gameObject.name + " is now locked in place.");
+            isLocked = true;
         }
         else if (!shouldBeLocked && isLocked)
         {
             isLocked = false;
-            UnityEngine.Debug.Log(gameObject.name + " is now unlocked.");
         }
     }
 
-    //check if this head is correctly placed on its matching body
     public bool IsCorrectlyPlaced()
     {
         return isLocked;
