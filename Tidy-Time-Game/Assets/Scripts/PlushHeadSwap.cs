@@ -28,6 +28,9 @@ public class PlushHeadSwap : MonoBehaviour
             transform.position = savedPosition;
             startPosition = savedPosition;
         }
+        
+        // Check if we start in the correct position
+        CheckAndUpdateLockStatus();
     }
 
     private void OnMouseDown()
@@ -127,6 +130,9 @@ public class PlushHeadSwap : MonoBehaviour
             transform.position = startPosition;
         }
 
+        // Check if we're still in the correct position after moving
+        CheckAndUpdateLockStatus();
+
         //save the new position to SaveManager
         if (SaveManager.Instance != null)
         {
@@ -138,7 +144,7 @@ public class PlushHeadSwap : MonoBehaviour
     {
         if (otherHead != null && otherHead != this)
         {
-            UnityEngine.Debug.Log("Swapping " + gameObject.name + " with " + otherHead.gameObject.name); //was used to look for causes of heads not swapping correctly
+            UnityEngine.Debug.Log("Swapping " + gameObject.name + " with " + otherHead.gameObject.name);
 
             //swap the stored valid positions
             Vector3 tempPosition = startPosition;
@@ -148,6 +154,10 @@ public class PlushHeadSwap : MonoBehaviour
             //snap each head to its new valid position
             transform.position = startPosition;
             otherHead.transform.position = otherHead.startPosition;
+
+            // Check lock status for both heads after swapping
+            CheckAndUpdateLockStatus();
+            otherHead.CheckAndUpdateLockStatus();
 
             //save updated positions
             if (SaveManager.Instance != null)
@@ -161,22 +171,29 @@ public class PlushHeadSwap : MonoBehaviour
         PlushGameManager.Instance.CheckTaskCompletion();
     }
 
-    //check if this head is correctly placed on its matching body
-    public bool IsCorrectlyPlaced()
+    // New method to check and update lock status
+    private void CheckAndUpdateLockStatus()
     {
         float snapThreshold = 0.2f;
-        bool isCorrect = Vector3.Distance(transform.position, correctBody.position) < snapThreshold;
+        bool shouldBeLocked = Vector3.Distance(transform.position, correctBody.position) < snapThreshold;
 
-        //lock the head if it's in the correct spot
-        if (isCorrect && !isLocked)
+        if (shouldBeLocked && !isLocked)
         {
             isLocked = true;
             transform.position = correctBody.position; // Snap exactly to the body
+            startPosition = correctBody.position;
             UnityEngine.Debug.Log(gameObject.name + " is now locked in place.");
         }
-
-        return isCorrect;
-
+        else if (!shouldBeLocked && isLocked)
+        {
+            isLocked = false;
+            UnityEngine.Debug.Log(gameObject.name + " is now unlocked.");
+        }
     }
 
+    //check if this head is correctly placed on its matching body
+    public bool IsCorrectlyPlaced()
+    {
+        return isLocked;
+    }
 }
