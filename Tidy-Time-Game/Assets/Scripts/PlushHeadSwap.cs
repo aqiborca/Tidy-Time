@@ -1,6 +1,3 @@
-//Note to self: TO DO -   figure out a way to implement detection of the right placement properly, work in progress.
-
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,12 +5,14 @@ using UnityEngine;
 
 public class PlushHeadSwap : MonoBehaviour
 {
-    //stores the head�s last valid (snapped) position
+    //stores the head's last valid (snapped) position
     private Vector3 startPosition;
     //holds the offset between the head's position and the mouse click point
     private Vector3 dragOffset;
     //flag for whether this head is currently being dragged
     private bool isDragging = false;
+    
+    private bool isLocked = false;
 
     public Transform correctBody;
 
@@ -33,6 +32,8 @@ public class PlushHeadSwap : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (isLocked) return;
+
         UnityEngine.Debug.Log(gameObject.name + " clicked");  //had some issues with click detection - fixed now, leaving debug log just in case
         isDragging = true;
         //calculate the offset between the head position and the mouse's position
@@ -46,6 +47,8 @@ public class PlushHeadSwap : MonoBehaviour
     {
         if (isDragging)
         {
+            if (isLocked || !isDragging) return;
+
             //get the current mouse position
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0;
@@ -56,6 +59,8 @@ public class PlushHeadSwap : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (isLocked) return;
+
         isDragging = false;
 
         //get the head's collider to use its bounds
@@ -160,7 +165,18 @@ public class PlushHeadSwap : MonoBehaviour
     public bool IsCorrectlyPlaced()
     {
         float snapThreshold = 0.2f;
-        return Vector3.Distance(transform.position, correctBody.position) < snapThreshold;
+        bool isCorrect = Vector3.Distance(transform.position, correctBody.position) < snapThreshold;
+
+        //lock the head if it's in the correct spot
+        if (isCorrect && !isLocked)
+        {
+            isLocked = true;
+            transform.position = correctBody.position; // Snap exactly to the body
+            UnityEngine.Debug.Log(gameObject.name + " is now locked in place.");
+        }
+
+        return isCorrect;
+
     }
 
 }
