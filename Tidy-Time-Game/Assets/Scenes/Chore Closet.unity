@@ -940,6 +940,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &465722160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 465722162}
+  - component: {fileID: 465722161}
+  m_Layer: 0
+  m_Name: ClosetTaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &465722161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465722160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 737c766ebb3d5b64aac3bd6c4cf9875f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clothingItems:
+  - {fileID: 1272050872}
+  - {fileID: 105960471}
+  - {fileID: 1823863850}
+  - {fileID: 429625684}
+  organizedVersions:
+  - {fileID: 235261351}
+  - {fileID: 64852595}
+  - {fileID: 1294133560}
+  - {fileID: 1276812301}
+  collectables:
+  - {fileID: 745284617}
+  - {fileID: 903608985}
+  - {fileID: 1412709872}
+--- !u!4 &465722162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465722160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.13363689, y: -0.028042916, z: 670.1435}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &620025263
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,6 +1091,7 @@ GameObject:
   - component: {fileID: 745284619}
   - component: {fileID: 745284621}
   - component: {fileID: 745284620}
+  - component: {fileID: 745284622}
   m_Layer: 0
   m_Name: FishFood
   m_TagString: Untagged
@@ -1179,6 +1238,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.9619486, y: 2.56}
   m_EdgeRadius: 0
+--- !u!114 &745284622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745284617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bccabd4cddecc84992ba6897c301049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: FishFood
 --- !u!1 &903608985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1191,8 +1263,9 @@ GameObject:
   - component: {fileID: 903608987}
   - component: {fileID: 903608989}
   - component: {fileID: 903608988}
+  - component: {fileID: 903608990}
   m_Layer: 0
-  m_Name: Trash_01
+  m_Name: Trash1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1337,6 +1410,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.7725422, y: 1.9565761}
   m_EdgeRadius: 0
+--- !u!114 &903608990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903608985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bccabd4cddecc84992ba6897c301049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Trash1
 --- !u!1 &1209334246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,13 +1839,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276812301}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.06295932, w: 0.9980161}
-  m_LocalPosition: {x: 223, y: 215, z: -9318.694}
+  m_LocalRotation: {x: -0, y: -0, z: 0.07049516, w: 0.9975121}
+  m_LocalPosition: {x: 223, y: 204, z: -9318.694}
   m_LocalScale: {x: -62.12463, y: 62.12463, z: 62.12463}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1887887665}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 7.219}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 8.085}
 --- !u!61 &1276812305
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2210,8 +2296,9 @@ GameObject:
   - component: {fileID: 1412709874}
   - component: {fileID: 1412709876}
   - component: {fileID: 1412709875}
+  - component: {fileID: 1412709877}
   m_Layer: 0
-  m_Name: Trash_03
+  m_Name: Trash2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2356,6 +2443,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1412709877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412709872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bccabd4cddecc84992ba6897c301049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Trash2
 --- !u!1 &1546746781
 GameObject:
   m_ObjectHideFlags: 0
@@ -2938,3 +3038,4 @@ SceneRoots:
   - {fileID: 460942938}
   - {fileID: 1887887665}
   - {fileID: 1546746784}
+  - {fileID: 465722162}
