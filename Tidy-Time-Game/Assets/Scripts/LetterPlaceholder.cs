@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 [RequireComponent(typeof(Image))]
 public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
@@ -11,8 +12,35 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
 
     private void Awake()
     {
-        // Disable placeholder image visuals
         GetComponent<Image>().enabled = false;
+    }
+
+    private void Start()
+    {
+        // Randomize positions every time the scene loads
+        RandomizeLetterPositions();
+    }
+
+    private void RandomizeLetterPositions()
+    {
+        // Only randomize if this is a placeholder (not during gameplay)
+        if (transform.childCount == 0)
+        {
+            var allLetters = FindObjectsOfType<DraggableLetter>()
+                .Where(l => l.transform.parent.GetComponent<LetterPlaceholder>() == null)
+                .OrderBy(x => Random.value)
+                .ToList();
+
+            if (allLetters.Count > 0)
+            {
+                // Take the first available letter
+                var letter = allLetters.First();
+                letter.transform.SetParent(transform);
+                letter.rectTransform.anchoredPosition = Vector2.zero;
+                letter.startParent = transform;
+                letter.startPosition = Vector2.zero;
+            }
+        }
     }
 
     public static void OnDragStarted(DraggableLetter letter)
@@ -31,7 +59,6 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
         isAnyDragActive = false;
         currentDraggedLetter = null;
         
-        // Restore any faded letters
         foreach (var placeholder in FindObjectsOfType<LetterPlaceholder>())
         {
             if (placeholder.existingLetterCanvasGroup != null)
@@ -45,13 +72,11 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
     {
         if (!isAnyDragActive || currentDraggedLetter == null) return;
         
-        // Reset transparency of existing letter
         if (existingLetterCanvasGroup != null)
         {
             existingLetterCanvasGroup.alpha = 1f;
         }
 
-        // If this placeholder has a letter, swap them
         if (transform.childCount > 0)
         {
             DraggableLetter existingLetter = transform.GetChild(0).GetComponent<DraggableLetter>();
@@ -63,7 +88,6 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
             existingLetter.isCorrectlyPlaced = false;
         }
 
-        // Place dragged letter in this placeholder
         currentDraggedLetter.transform.SetParent(transform);
         currentDraggedLetter.rectTransform.anchoredPosition = Vector3.zero;
         currentDraggedLetter.startParent = transform;
@@ -72,7 +96,6 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Make existing letter transparent when hovered during drag
         if (isAnyDragActive && transform.childCount > 0)
         {
             existingLetterCanvasGroup = transform.GetChild(0).GetComponent<CanvasGroup>();
@@ -85,7 +108,6 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Restore existing letter's opacity
         if (existingLetterCanvasGroup != null)
         {
             existingLetterCanvasGroup.alpha = 1f;

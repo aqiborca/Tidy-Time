@@ -307,6 +307,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &37226950
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -414,6 +415,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &198108905
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -521,6 +523,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &221741373
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -717,6 +720,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &284106718
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -913,6 +917,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &288966618
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1020,6 +1025,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &301644074
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1216,6 +1222,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &416179507
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1412,6 +1419,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &485431475
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1519,6 +1527,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &486644984
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1998,6 +2007,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &568358049
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2173,6 +2183,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &702560067
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2458,6 +2469,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &951486510
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2565,6 +2577,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &953408502
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2672,6 +2685,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &970738246
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2868,6 +2882,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1015094230
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3064,6 +3079,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1040833344
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3260,6 +3276,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1168244868
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3456,6 +3473,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1261692419
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3563,6 +3581,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1295660307
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3932,6 +3951,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1458576121
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4222,7 +4242,7 @@ GameObject:
   - component: {fileID: 1610801209}
   - component: {fileID: 1610801210}
   m_Layer: 0
-  m_Name: SoupManager
+  m_Name: LetterRandomizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4252,7 +4272,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1610801208}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4106107d150e4de4b868c2d853237deb, type: 3}
+  m_Script: {fileID: 11500000, guid: 54550df1cdce69940bafb2dfa21fdb3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1616406023
@@ -4528,6 +4548,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1669879662
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4724,6 +4745,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1842582337
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4831,6 +4853,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &1845463997
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5351,6 +5374,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &2058729422
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5547,6 +5571,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &2067393925
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5755,6 +5780,7 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0}
   startParent: {fileID: 0}
   isCorrectlyPlaced: 0
+  hoverAlpha: 0.7
 --- !u!225 &2091150948
 CanvasGroup:
   m_ObjectHideFlags: 0
