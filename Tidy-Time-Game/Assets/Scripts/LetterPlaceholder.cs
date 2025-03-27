@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Linq;
 
 [RequireComponent(typeof(Image))]
 public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
@@ -13,34 +12,6 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
     private void Awake()
     {
         GetComponent<Image>().enabled = false;
-    }
-
-    private void Start()
-    {
-        // Randomize positions every time the scene loads
-        RandomizeLetterPositions();
-    }
-
-    private void RandomizeLetterPositions()
-    {
-        // Only randomize if this is a placeholder (not during gameplay)
-        if (transform.childCount == 0)
-        {
-            var allLetters = FindObjectsOfType<DraggableLetter>()
-                .Where(l => l.transform.parent.GetComponent<LetterPlaceholder>() == null)
-                .OrderBy(x => Random.value)
-                .ToList();
-
-            if (allLetters.Count > 0)
-            {
-                // Take the first available letter
-                var letter = allLetters.First();
-                letter.transform.SetParent(transform);
-                letter.rectTransform.anchoredPosition = Vector2.zero;
-                letter.startParent = transform;
-                letter.startPosition = Vector2.zero;
-            }
-        }
     }
 
     public static void OnDragStarted(DraggableLetter letter)
@@ -55,7 +26,6 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
         {
             currentDraggedLetter.canvasGroup.alpha = 1f;
         }
-        
         isAnyDragActive = false;
         currentDraggedLetter = null;
         
@@ -72,18 +42,17 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
     {
         if (!isAnyDragActive || currentDraggedLetter == null) return;
         
-        if (existingLetterCanvasGroup != null)
-        {
-            existingLetterCanvasGroup.alpha = 1f;
-        }
+        // Store references before making changes
+        Transform originalParent = currentDraggedLetter.startParent;
+        DraggableLetter existingLetter = transform.childCount > 0 ? 
+            transform.GetChild(0).GetComponent<DraggableLetter>() : null;
 
-        if (transform.childCount > 0)
+        // Handle the swap
+        if (existingLetter != null)
         {
-            DraggableLetter existingLetter = transform.GetChild(0).GetComponent<DraggableLetter>();
-            
-            existingLetter.transform.SetParent(currentDraggedLetter.startParent);
+            existingLetter.transform.SetParent(originalParent);
             existingLetter.rectTransform.anchoredPosition = currentDraggedLetter.startPosition;
-            existingLetter.startParent = currentDraggedLetter.startParent;
+            existingLetter.startParent = originalParent;
             existingLetter.startPosition = currentDraggedLetter.startPosition;
             existingLetter.isCorrectlyPlaced = false;
         }
@@ -92,6 +61,13 @@ public class LetterPlaceholder : MonoBehaviour, IDropHandler, IPointerEnterHandl
         currentDraggedLetter.rectTransform.anchoredPosition = Vector3.zero;
         currentDraggedLetter.startParent = transform;
         currentDraggedLetter.startPosition = Vector3.zero;
+
+        // Check placement for BOTH letters involved in the swap
+        currentDraggedLetter.CheckPlacement();
+        if (existingLetter != null)
+        {
+            existingLetter.CheckPlacement();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)

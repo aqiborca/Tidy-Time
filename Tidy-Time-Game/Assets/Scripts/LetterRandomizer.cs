@@ -1,43 +1,50 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class LetterRandomizer : MonoBehaviour
 {
-    private void Start()
+    public void RandomizeLetters(bool allowCorrectPlacements)
     {
-        RandomizeAllLetters();
-    }
+        var placeholders = FindObjectsOfType<LetterPlaceholder>().ToList();
+        var letters = FindObjectsOfType<DraggableLetter>().ToList();
 
-    public void RandomizeAllLetters()
-    {
-        var placeholders = FindObjectsOfType<LetterPlaceholder>()
-            .OrderBy(x => Random.value)
-            .ToArray();
-
-        var letters = FindObjectsOfType<DraggableLetter>()
-            .Where(l => !l.isCorrectlyPlaced)
-            .ToArray();
-
-        // First, remove all letters from placeholders
-        foreach (var placeholder in FindObjectsOfType<LetterPlaceholder>())
+        // Clear all placements
+        foreach (var placeholder in placeholders)
         {
             if (placeholder.transform.childCount > 0)
             {
-                var letter = placeholder.transform.GetChild(0).GetComponent<DraggableLetter>();
-                if (letter != null)
-                {
-                    letter.transform.SetParent(null);
-                }
+                var child = placeholder.transform.GetChild(0);
+                child.SetParent(null);
             }
         }
 
-        // Then assign letters to random placeholders
-        for (int i = 0; i < Mathf.Min(letters.Length, placeholders.Length); i++)
+        // Create list of allowed placements
+        List<Transform> possiblePlacements = new List<Transform>();
+        foreach (var placeholder in placeholders)
         {
-            letters[i].transform.SetParent(placeholders[i].transform);
+            bool isCorrectForAnyLetter = letters.Any(l => 
+                l.name.Replace("Letter ", "") == placeholder.name.Replace("Placeholder ", ""));
+            
+            if (allowCorrectPlacements || !isCorrectForAnyLetter)
+            {
+                possiblePlacements.Add(placeholder.transform);
+            }
+        }
+
+        // Assign letters randomly
+        letters = letters.OrderBy(x => Random.value).ToList();
+        for (int i = 0; i < letters.Count; i++)
+        {
+            Transform targetParent = i < possiblePlacements.Count ? 
+                possiblePlacements[i] : 
+                placeholders[i % placeholders.Count].transform;
+
+            letters[i].transform.SetParent(targetParent);
             letters[i].rectTransform.anchoredPosition = Vector2.zero;
-            letters[i].startParent = placeholders[i].transform;
+            letters[i].startParent = targetParent;
             letters[i].startPosition = Vector2.zero;
+            letters[i].isCorrectlyPlaced = false;
         }
     }
 }
