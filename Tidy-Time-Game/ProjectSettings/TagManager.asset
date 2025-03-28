@@ -11,6 +11,7 @@ TagManager:
   - HangerZone
   - SideShelfZone
   - TopShelfZone
+  - BottomShelfZone
   layers:
   - Default
   - TransparentFX
