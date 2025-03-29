@@ -16,10 +16,12 @@ public class PlushHeadSwap : MonoBehaviour
     public float snapThreshold = 0.5f;
     public float lockThreshold = 0.3f;
     public float hoverAlpha = 0.6f;
+    public float hoverBeforePickupAlpha = 0.8f;
 
-    // Non-static references that get rebuilt each scene load
     private List<Transform> availableBodies = new List<Transform>();
     private Dictionary<Transform, PlushHeadSwap> bodyToHeadMap = new Dictionary<Transform, PlushHeadSwap>();
+    private static List<Transform> occupiedBodies = new List<Transform>();
+    private static bool positionsAssigned = false;
 
     void Start()
     {
@@ -27,10 +29,14 @@ public class PlushHeadSwap : MonoBehaviour
         originalColor = spriteRenderer.color;
         polyCollider = GetComponent<PolygonCollider2D>();
 
-        // Rebuild references each time the scene loads
         InitializeBodies();
+
+        if (!positionsAssigned)
+        {
+            occupiedBodies.Clear();
+            positionsAssigned = true;
+        }
         
-        // Load saved position or assign random position
         if (SaveManager.Instance != null)
         {
             Vector3 savedPosition = SaveManager.Instance.GetPlushiePosition(gameObject.name, Vector3.zero);
@@ -39,12 +45,15 @@ public class PlushHeadSwap : MonoBehaviour
                 transform.position = savedPosition;
                 startPosition = savedPosition;
                 
-                // Find which body this position corresponds to
                 foreach (var body in availableBodies)
                 {
                     if (body != null && Vector3.Distance(savedPosition, body.position) < 0.1f)
                     {
-                        bodyToHeadMap[body] = this;
+                        if (!occupiedBodies.Contains(body))
+                        {
+                            occupiedBodies.Add(body);
+                            bodyToHeadMap[body] = this;
+                        }
                         break;
                     }
                 }
@@ -81,73 +90,86 @@ public class PlushHeadSwap : MonoBehaviour
     {
         if (availableBodies.Count == 0) return;
 
-        // Create list of possible bodies (excluding correct body and already occupied bodies)
+        // Create a list of all possible bodies (excluding correct body)
         List<Transform> possibleBodies = new List<Transform>();
         foreach (var body in availableBodies)
         {
             if (body == null) continue;
-            
-            // Don't allow heads to start on their correct body
             if (body == correctBody) continue;
-            
-            // Don't use bodies that already have a head
-            if (!bodyToHeadMap.ContainsKey(body))
+            possibleBodies.Add(body);
+        }
+
+        // Remove already occupied bodies
+        List<Transform> unoccupiedBodies = new List<Transform>();
+        foreach (var body in possibleBodies)
+        {
+            if (!occupiedBodies.Contains(body))
             {
-                possibleBodies.Add(body);
+                unoccupiedBodies.Add(body);
             }
         }
 
-        // If no valid bodies left (shouldn't happen with proper setup), use any non-correct body
-        if (possibleBodies.Count == 0)
+        // If no unoccupied bodies left (shouldn't happen with proper setup)
+        if (unoccupiedBodies.Count == 0)
         {
-            foreach (var body in availableBodies)
-            {
-                if (body != null && body != correctBody)
-                {
-                    possibleBodies.Add(body);
-                    break;
-                }
-            }
-        }
-
-        // If still no bodies (only one head?), use a random position near bodies
-        if (possibleBodies.Count == 0)
-        {
-            startPosition = availableBodies[0].position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
+            // Place near a random body
+            Transform fallbackBody = availableBodies[Random.Range(0, availableBodies.Count)];
+            startPosition = fallbackBody.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
             transform.position = startPosition;
             return;
         }
 
-        // Randomly select one of the available bodies
-        int randomIndex = Random.Range(0, possibleBodies.Count);
-        Transform selectedBody = possibleBodies[randomIndex];
+        // Select a random unoccupied body
+        int randomIndex = Random.Range(0, unoccupiedBodies.Count);
+        Transform selectedBody = unoccupiedBodies[randomIndex];
         
         if (selectedBody != null)
         {
             transform.position = selectedBody.position;
             startPosition = selectedBody.position;
+            
+            occupiedBodies.Add(selectedBody);
             bodyToHeadMap[selectedBody] = this;
         }
 
-        // We should never start locked since we excluded correct body
         isLocked = false;
+    }
+
+    private void OnMouseEnter()
+    {
+        if (!isDragging && !isLocked)
+        {
+            SetTransparency(hoverBeforePickupAlpha);
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        if (!isDragging && !isLocked)
+        {
+            ResetTransparency();
+        }
     }
 
     private void OnMouseDown()
     {
         if (isLocked) return;
 
+        ResetTransparency();
         isDragging = true;
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = transform.position.z;
         dragOffset = transform.position - mouseWorldPos;
 
-        // Remove from body mapping when we start dragging
         foreach (var pair in new Dictionary<Transform, PlushHeadSwap>(bodyToHeadMap))
         {
             if (pair.Value == this)
             {
                 bodyToHeadMap.Remove(pair.Key);
+                if (occupiedBodies.Contains(pair.Key))
+                {
+                    occupiedBodies.Remove(pair.Key);
+                }
                 break;
             }
         }
@@ -197,74 +219,31 @@ public class PlushHeadSwap : MonoBehaviour
         ResetAllHeadsTransparency();
         isDragging = false;
 
-        // Null check for correctBody
         if (correctBody == null)
         {
             transform.position = startPosition;
             return;
         }
 
-        // Check for correct body first
         float distanceToCorrect = Vector3.Distance(transform.position, correctBody.position);
         if (distanceToCorrect < snapThreshold)
         {
-            // If correct body is already occupied, swap with that head
             if (bodyToHeadMap.ContainsKey(correctBody))
             {
                 PlushHeadSwap otherHead = bodyToHeadMap[correctBody];
                 SwapWithHead(otherHead);
-                return;
             }
-
-            // Otherwise take this position
-            transform.position = correctBody.position;
-            startPosition = correctBody.position;
-            bodyToHeadMap[correctBody] = this;
-            CheckAndUpdateLockStatus();
-            
-            if (SaveManager.Instance != null)
+            else
             {
-                SaveManager.Instance.SavePlushiePosition(gameObject.name, transform.position);
-            }
-            
-            if (PlushGameManager.Instance != null)
-            {
-                PlushGameManager.Instance.CheckTaskCompletion();
+                transform.position = startPosition;
+                ReassignToPreviousBody();
             }
             return;
         }
 
-        // Check for other bodies
-        foreach (var body in availableBodies)
-        {
-            if (body == null) continue;
-            
-            if (body != correctBody && Vector3.Distance(transform.position, body.position) < snapThreshold)
-            {
-                // If body is occupied, swap with that head
-                if (bodyToHeadMap.ContainsKey(body))
-                {
-                    PlushHeadSwap otherHead = bodyToHeadMap[body];
-                    SwapWithHead(otherHead);
-                    return;
-                }
-
-                // Otherwise take this position
-                transform.position = body.position;
-                startPosition = body.position;
-                bodyToHeadMap[body] = this;
-                
-                if (SaveManager.Instance != null)
-                {
-                    SaveManager.Instance.SavePlushiePosition(gameObject.name, transform.position);
-                }
-                return;
-            }
-        }
-
-        // Check for other heads (direct collision)
         PlushHeadSwap targetHead = null;
         PlushHeadSwap[] allHeads = FindObjectsOfType<PlushHeadSwap>();
+        
         foreach (PlushHeadSwap head in allHeads)
         {
             if (head != this && !head.isDragging && head.polyCollider != null)
@@ -283,18 +262,8 @@ public class PlushHeadSwap : MonoBehaviour
         }
         else
         {
-            // Return to start position if no valid placement
             transform.position = startPosition;
-            
-            // Try to find which body this was on before
-            foreach (var body in availableBodies)
-            {
-                if (body != null && Vector3.Distance(startPosition, body.position) < 0.1f)
-                {
-                    bodyToHeadMap[body] = this;
-                    break;
-                }
-            }
+            ReassignToPreviousBody();
         }
 
         if (SaveManager.Instance != null)
@@ -303,11 +272,26 @@ public class PlushHeadSwap : MonoBehaviour
         }
     }
 
+    private void ReassignToPreviousBody()
+    {
+        foreach (var body in availableBodies)
+        {
+            if (body != null && Vector3.Distance(startPosition, body.position) < 0.1f)
+            {
+                bodyToHeadMap[body] = this;
+                if (!occupiedBodies.Contains(body))
+                {
+                    occupiedBodies.Add(body);
+                }
+                break;
+            }
+        }
+    }
+
     private void SwapWithHead(PlushHeadSwap otherHead)
     {
         if (otherHead == null) return;
 
-        // Swap positions
         Vector3 tempPosition = startPosition;
         startPosition = otherHead.startPosition;
         otherHead.startPosition = tempPosition;
@@ -315,11 +299,9 @@ public class PlushHeadSwap : MonoBehaviour
         transform.position = startPosition;
         otherHead.transform.position = otherHead.startPosition;
 
-        // Update body mappings
         UpdateBodyMapping(this);
         UpdateBodyMapping(otherHead);
 
-        // Force both heads to check their lock status
         CheckAndUpdateLockStatus(true);
         otherHead.CheckAndUpdateLockStatus(true);
 
@@ -337,22 +319,28 @@ public class PlushHeadSwap : MonoBehaviour
 
     private void UpdateBodyMapping(PlushHeadSwap head)
     {
-        // Remove old mapping
         foreach (var pair in new Dictionary<Transform, PlushHeadSwap>(bodyToHeadMap))
         {
             if (pair.Value == head)
             {
                 bodyToHeadMap.Remove(pair.Key);
+                if (occupiedBodies.Contains(pair.Key))
+                {
+                    occupiedBodies.Remove(pair.Key);
+                }
                 break;
             }
         }
 
-        // Add new mapping if on a body
         foreach (var body in availableBodies)
         {
             if (body != null && Vector3.Distance(head.transform.position, body.position) < 0.1f)
             {
                 bodyToHeadMap[body] = head;
+                if (!occupiedBodies.Contains(body))
+                {
+                    occupiedBodies.Add(body);
+                }
                 break;
             }
         }
@@ -394,12 +382,10 @@ public class PlushHeadSwap : MonoBehaviour
 
         if (shouldBeLocked)
         {
-            // If we're close enough to the correct body, snap to it exactly
             transform.position = correctBody.position;
             startPosition = correctBody.position;
             isLocked = true;
             
-            // Ensure we're in the body mapping
             if (!bodyToHeadMap.ContainsKey(correctBody) || bodyToHeadMap[correctBody] != this)
             {
                 UpdateBodyMapping(this);
@@ -407,7 +393,6 @@ public class PlushHeadSwap : MonoBehaviour
         }
         else if (forceCheck || isLocked)
         {
-            // Only unlock if we're forcing a check or if we were previously locked
             isLocked = false;
         }
     }
@@ -415,5 +400,10 @@ public class PlushHeadSwap : MonoBehaviour
     public bool IsCorrectlyPlaced()
     {
         return isLocked;
+    }
+
+    private void OnDestroy()
+    {
+        positionsAssigned = false;
     }
 }

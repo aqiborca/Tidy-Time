@@ -1528,6 +1528,11 @@ MonoBehaviour:
   isMathHomeworkCompleted: 0
   isGarbageCompleted: 0
   isOrganizeClosetCompleted: 0
+  alphabetSoupObject: {fileID: 866890593}
+  swapPlushiesObject: {fileID: 294759893}
+  mathHomeworkObject: {fileID: 2118673825}
+  garbageObject: {fileID: 82654386}
+  organizeClosetObject: {fileID: 2019841689}
   gameOverScreen: {fileID: 0}
 --- !u!4 &376328515
 Transform:

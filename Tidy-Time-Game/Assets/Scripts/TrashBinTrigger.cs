@@ -7,7 +7,7 @@ public class TrashBinTrigger : MonoBehaviour
 
     void Start()
     {
-        //count all GameObjects tagged "Trash" at the start
+        // Count all trash pieces at the start
         totalTrashPieces = GameObject.FindGameObjectsWithTag("Trash").Length;
     }
 
@@ -16,17 +16,32 @@ public class TrashBinTrigger : MonoBehaviour
         if (other.CompareTag("Trash"))
         {
             Debug.Log("Trash got in the bin");
-
             trashInBinCount++;
+            other.tag = "Untagged"; // Prevent double-counting
 
-            //prevent it from being counted again
-            other.tag = "Untagged";
-
-            //if all trash pieces are in, mark as complete
             if (trashInBinCount >= totalTrashPieces)
             {
                 Debug.Log("All trash is in the bin");
-                ChoreManager.Instance.CompleteChore("garbage");
+                
+                // Safely call ChoreManager (your original requirement)
+                if (ChoreManager.Instance != null)
+                {
+                    ChoreManager.Instance.CompleteChore("garbage");
+                }
+                else
+                {
+                    Debug.LogError("ChoreManager.Instance is missing!");
+                }
+
+                // Safely call TrashManager (your new requirement)
+                if (TrashManager.Instance != null)
+                {
+                    TrashManager.Instance.NotifyTrashCompleted();
+                }
+                else
+                {
+                    Debug.LogWarning("TrashManager.Instance is missing (optional)");
+                }
             }
         }
     }

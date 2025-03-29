@@ -152,7 +152,7 @@ Transform:
   m_GameObject: {fileID: 27736390}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.37, y: -0.76, z: 0}
+  m_LocalPosition: {x: -5.37, y: -0.76, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -252,9 +252,8 @@ MonoBehaviour:
   correctBody: {fileID: 1070008791}
   snapThreshold: 0.5
   lockThreshold: 0.3
-  dragAlpha: 0.6
   hoverAlpha: 0.6
-  headPositionOffset: {x: 0, y: 0.2, z: 0}
+  hoverBeforePickupAlpha: 0.8
 --- !u!60 &27736396
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1017,7 +1016,7 @@ Transform:
   m_GameObject: {fileID: 988421798}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.28, y: -0.96, z: 0}
+  m_LocalPosition: {x: 1.28, y: -0.96, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1117,9 +1116,8 @@ MonoBehaviour:
   correctBody: {fileID: 1808931067}
   snapThreshold: 0.5
   lockThreshold: 0.3
-  dragAlpha: 0.6
   hoverAlpha: 0.6
-  headPositionOffset: {x: 0, y: 0.2, z: 0}
+  hoverBeforePickupAlpha: 0.8
 --- !u!60 &988421804
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1690,7 +1688,7 @@ Transform:
   m_GameObject: {fileID: 1447722191}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.96, y: 0.04, z: 0}
+  m_LocalPosition: {x: -1.96, y: 0.04, z: 5}
   m_LocalScale: {x: 1.28, y: 1.28, z: 1.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1790,9 +1788,8 @@ MonoBehaviour:
   correctBody: {fileID: 118648188}
   snapThreshold: 0.5
   lockThreshold: 0.3
-  dragAlpha: 0.6
   hoverAlpha: 0.6
-  headPositionOffset: {x: 0, y: 0.2, z: 0}
+  hoverBeforePickupAlpha: 0.8
 --- !u!60 &1447722197
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2174,7 +2171,7 @@ Transform:
   m_GameObject: {fileID: 1656842279}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.22, y: -1.27, z: 0}
+  m_LocalPosition: {x: 4.22, y: -1.27, z: 5}
   m_LocalScale: {x: 0.7516599, y: 0.7516599, z: 0.7516599}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2274,9 +2271,8 @@ MonoBehaviour:
   correctBody: {fileID: 37475832}
   snapThreshold: 0.5
   lockThreshold: 0.3
-  dragAlpha: 0.6
   hoverAlpha: 0.6
-  headPositionOffset: {x: 0, y: 0.2, z: 0}
+  hoverBeforePickupAlpha: 0.8
 --- !u!60 &1656842285
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2403,14 +2399,14 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 27736391}
   - {fileID: 1070008791}
-  - {fileID: 1656842280}
   - {fileID: 37475832}
-  - {fileID: 1447722192}
   - {fileID: 118648188}
-  - {fileID: 988421799}
   - {fileID: 1808931067}
+  - {fileID: 27736391}
+  - {fileID: 1656842280}
+  - {fileID: 1447722192}
+  - {fileID: 988421799}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1808931066
