@@ -12,6 +12,8 @@ TagManager:
   - SideShelfZone
   - TopShelfZone
   - BottomShelfZone
+  - Trash
+  - SceneBorder
   layers:
   - Default
   - TransparentFX
@@ -19,8 +21,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - TrashIdle
+  - TrashActive
   - 
   - 
   - 
