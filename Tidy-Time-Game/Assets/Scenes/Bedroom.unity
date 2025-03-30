@@ -365,6 +365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 82654387}
   - component: {fileID: 82654389}
+  - component: {fileID: 82654390}
   - component: {fileID: 82654388}
   m_Layer: 0
   m_Name: Chore Trash
@@ -489,6 +490,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82654386}
   m_CullTransparentMesh: 1
+--- !u!114 &82654390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82654386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab24994fe79a7e745a02a4dee272cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choreName: garbage
 --- !u!1 &118973713
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,6 +853,7 @@ GameObject:
   m_Component:
   - component: {fileID: 189875438}
   - component: {fileID: 189875440}
+  - component: {fileID: 189875441}
   - component: {fileID: 189875439}
   m_Layer: 0
   m_Name: Chore Fish
@@ -963,6 +978,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189875437}
   m_CullTransparentMesh: 1
+--- !u!114 &189875441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189875437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab24994fe79a7e745a02a4dee272cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choreName: feedfish
 --- !u!1 &286719371
 GameObject:
   m_ObjectHideFlags: 0
@@ -1070,6 +1098,7 @@ GameObject:
   m_Component:
   - component: {fileID: 294759894}
   - component: {fileID: 294759896}
+  - component: {fileID: 294759897}
   - component: {fileID: 294759895}
   m_Layer: 0
   m_Name: Chore Plushies
@@ -1194,6 +1223,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 294759893}
   m_CullTransparentMesh: 1
+--- !u!114 &294759897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294759893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab24994fe79a7e745a02a4dee272cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choreName: swapplushies
 --- !u!1 &342102054
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,12 +1570,7 @@ MonoBehaviour:
   isMathHomeworkCompleted: 0
   isGarbageCompleted: 0
   isOrganizeClosetCompleted: 0
-  alphabetSoupObject: {fileID: 866890593}
-  swapPlushiesObject: {fileID: 294759893}
-  mathHomeworkObject: {fileID: 2118673825}
-  garbageObject: {fileID: 82654386}
-  organizeClosetObject: {fileID: 2019841689}
-  gameOverScreen: {fileID: 0}
+  isFeedFishCompleted: 0
 --- !u!4 &376328515
 Transform:
   m_ObjectHideFlags: 0
@@ -2585,6 +2622,7 @@ GameObject:
   m_Component:
   - component: {fileID: 866890594}
   - component: {fileID: 866890596}
+  - component: {fileID: 866890597}
   - component: {fileID: 866890595}
   m_Layer: 0
   m_Name: Chore Soup
@@ -2709,6 +2747,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866890593}
   m_CullTransparentMesh: 1
+--- !u!114 &866890597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866890593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab24994fe79a7e745a02a4dee272cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choreName: alphabetsoup
 --- !u!1 &919108175
 GameObject:
   m_ObjectHideFlags: 0
@@ -5476,6 +5527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2019841690}
   - component: {fileID: 2019841692}
+  - component: {fileID: 2019841693}
   - component: {fileID: 2019841691}
   m_Layer: 0
   m_Name: Chore Closet
@@ -5600,6 +5652,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2019841689}
   m_CullTransparentMesh: 1
+--- !u!114 &2019841693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019841689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab24994fe79a7e745a02a4dee272cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choreName: organizecloset
 --- !u!1 &2052382550
 GameObject:
   m_ObjectHideFlags: 0
@@ -5852,6 +5917,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2118673826}
   - component: {fileID: 2118673828}
+  - component: {fileID: 2118673829}
   - component: {fileID: 2118673827}
   m_Layer: 0
   m_Name: Chore Homework
@@ -5976,6 +6042,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118673825}
   m_CullTransparentMesh: 1
+--- !u!114 &2118673829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118673825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab24994fe79a7e745a02a4dee272cf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choreName: mathhomework
 --- !u!1 &2145034152
 GameObject:
   m_ObjectHideFlags: 0

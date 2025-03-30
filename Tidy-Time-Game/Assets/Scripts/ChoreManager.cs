@@ -8,9 +8,7 @@ public class ChoreManager : MonoBehaviour
     public bool isMathHomeworkCompleted = false;
     public bool isGarbageCompleted = false;
     public bool isOrganizeClosetCompleted = false;
-
-    // Reference to the GameOver UI
-    public GameObject gameOverScreen;
+    public bool isFeedFishCompleted = false;
 
     // Static instance for easier access
     public static ChoreManager Instance { get; private set; }
@@ -30,15 +28,7 @@ public class ChoreManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeGameOverScreen();
-    }
 
-    private void InitializeGameOverScreen()
-    {
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.SetActive(false);
-        }
     }
 
     public bool IsChoreCompleted(string choreName)
@@ -55,6 +45,8 @@ public class ChoreManager : MonoBehaviour
                 return isGarbageCompleted;
             case "organizecloset":
                 return isOrganizeClosetCompleted;
+            case "feedfish":
+                return isFeedFishCompleted;
             default:
                 Debug.LogWarning($"Unknown chore: {choreName}");
                 return false;
@@ -80,6 +72,9 @@ public class ChoreManager : MonoBehaviour
             case "organizecloset":
                 isOrganizeClosetCompleted = true;
                 break;
+            case "feedfish":
+                isFeedFishCompleted = true;
+                break;
             default:
                 Debug.LogWarning($"Unknown chore: {choreName}");
                 return;
@@ -103,16 +98,12 @@ public class ChoreManager : MonoBehaviour
                isSwapPlushiesCompleted &&
                isMathHomeworkCompleted &&
                isGarbageCompleted &&
-               isOrganizeClosetCompleted;
+               isOrganizeClosetCompleted &&
+               isFeedFishCompleted;;
     }
 
     private void EndGame()
     {
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.SetActive(true);
-        }
         Debug.Log("All chores completed! Game over.");
-        // Add any additional game-end logic here
     }
 }

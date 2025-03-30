@@ -7,7 +7,6 @@ public class TrashManager : MonoBehaviour
 
     [Header("UI Elements")]
     public GameObject completionPanel;
-    public Button closeButton;
 
     [Header("Effects")]
     public ParticleSystem confettiEffect;
@@ -25,22 +24,34 @@ public class TrashManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
 
-        // Initialize UI
-        if (completionPanel != null)
+    private void Start()
+    {
+        if (ChoreManager.Instance != null)
         {
-            completionPanel.SetActive(false);
-        }
+            Debug.Log("Checking garbage completion on scene load...");
+            if (!ChoreManager.Instance.IsChoreCompleted("garbage"))
+            {
+                completionPanel.SetActive(false);
+                Debug.Log("NOT COMPLETE");
+            }
+            else
+            {
+                completionPanel.SetActive(true);
+                Debug.Log("IS COMPLETE");
 
-        // Setup close button
-        if (closeButton != null)
-        {
-            closeButton.onClick.AddListener(() => {
-                if (completionPanel != null)
+                // Make all objects with "Trash" tag invisible
+                GameObject[] trashObjects = GameObject.FindGameObjectsWithTag("Trash");
+                foreach (GameObject trash in trashObjects)
                 {
-                    completionPanel.SetActive(false);
+                    trash.SetActive(false); // Disables the object, making it invisible
                 }
-            });
+            }
+        }
+        else
+        {
+            Debug.LogError("ChoreManager instance is null in TrashManager!");
         }
     }
 
