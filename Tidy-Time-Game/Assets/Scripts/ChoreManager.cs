@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class ChoreManager : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class ChoreManager : MonoBehaviour
     // Static instance for easier access
     public static ChoreManager Instance { get; private set; }
 
+    // Event for when all chores are completed
+    public event Action OnAllChoresCompleted;
+
     private void Awake()
     {
         if (Instance == null)
@@ -24,11 +28,6 @@ public class ChoreManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Start()
-    {
-
     }
 
     public bool IsChoreCompleted(string choreName)
@@ -89,17 +88,18 @@ public class ChoreManager : MonoBehaviour
         if (AreAllChoresCompleted())
         {
             EndGame();
+            OnAllChoresCompleted?.Invoke(); // Trigger the event
         }
     }
 
-    private bool AreAllChoresCompleted()
+    public bool AreAllChoresCompleted()
     {
         return isAlphabetSoupCompleted &&
                isSwapPlushiesCompleted &&
                isMathHomeworkCompleted &&
                isGarbageCompleted &&
                isOrganizeClosetCompleted &&
-               isFeedFishCompleted;;
+               isFeedFishCompleted;
     }
 
     private void EndGame()

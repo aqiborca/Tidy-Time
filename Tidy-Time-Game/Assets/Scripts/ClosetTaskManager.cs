@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class ClosetTaskManager : MonoBehaviour
 {
-    public GameObject[] clothingItems; //unorganized
-    public GameObject[] organizedVersions; //organized
-    public GameObject[] collectables; //trash and fish food
-    public GameObject uiWithHints; //UI at the start
-    public GameObject finalUi;     //UI after completion (no bubbles)
+    public GameObject[] clothingItems; // unorganized
+    public GameObject[] organizedVersions; // organized
+    public GameObject[] collectables; // trash and fish food
+    public GameObject uiWithHints; // UI at the start
+    public GameObject finalUi; // UI after completion (no bubbles)
+    public GameObject completionPanel; // UI panel shown on completion
 
     private bool taskComplete = false;
     private List<GameObject> clothingQueue = new List<GameObject>();
@@ -16,7 +17,7 @@ public class ClosetTaskManager : MonoBehaviour
 
     void Start()
     {
-        //check completion if ChoreManager exists in scene
+        // Check completion if ChoreManager exists in scene
         if (ChoreManager.Instance != null && ChoreManager.Instance.IsChoreCompleted("organizecloset"))
         {
             SetSceneToCompletedState();
@@ -24,11 +25,11 @@ public class ClosetTaskManager : MonoBehaviour
             return;
         }
 
-        //shuffle clothingItems into clothingQueue
+        // Shuffle clothingItems into clothingQueue
         clothingQueue = new List<GameObject>(clothingItems);
         Shuffle(clothingQueue);
 
-        //deactivate all, then activate first
+        // Deactivate all, then activate first
         foreach (GameObject item in clothingItems)
             item.SetActive(false);
 
@@ -40,7 +41,7 @@ public class ClosetTaskManager : MonoBehaviour
     {
         if (taskComplete) return;
 
-        //progress through clothing items
+        // Progress through clothing items
         if (currentItemIndex < clothingQueue.Count && !clothingQueue[currentItemIndex].activeSelf)
         {
             currentItemIndex++;
@@ -51,7 +52,7 @@ public class ClosetTaskManager : MonoBehaviour
         bool allClothesPlaced = true;
         foreach (GameObject item in clothingItems)
         {
-            if (item.activeSelf) //if still visible -> not placed yet
+            if (item.activeSelf) // If still visible -> not placed yet
             {
                 allClothesPlaced = false;
                 break;
@@ -61,7 +62,7 @@ public class ClosetTaskManager : MonoBehaviour
         bool allCollected = true;
         foreach (GameObject item in collectables)
         {
-            if (item.activeSelf) //if still visible -> not collected yet
+            if (item.activeSelf) // If still visible -> not collected yet
             {
                 allCollected = false;
                 break;
@@ -76,6 +77,7 @@ public class ClosetTaskManager : MonoBehaviour
 
             if (uiWithHints != null) uiWithHints.SetActive(false);
             if (finalUi != null) finalUi.SetActive(true);
+            if (completionPanel != null) completionPanel.SetActive(true); // Activate completion panel
         }
     }
 
@@ -83,6 +85,7 @@ public class ClosetTaskManager : MonoBehaviour
     {
         if (uiWithHints != null) uiWithHints.SetActive(false);
         if (finalUi != null) finalUi.SetActive(true);
+        if (completionPanel != null) completionPanel.SetActive(true); // Ensure completion panel shows if already done
 
         foreach (GameObject item in clothingItems)
             item.SetActive(false);
