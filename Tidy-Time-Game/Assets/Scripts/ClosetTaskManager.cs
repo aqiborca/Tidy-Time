@@ -16,6 +16,14 @@ public class ClosetTaskManager : MonoBehaviour
 
     void Start()
     {
+        //check completion if ChoreManager exists in scene
+        if (ChoreManager.Instance != null && ChoreManager.Instance.IsChoreCompleted("organizecloset"))
+        {
+            SetSceneToCompletedState();
+            taskComplete = true;
+            return;
+        }
+
         //shuffle clothingItems into clothingQueue
         clothingQueue = new List<GameObject>(clothingItems);
         Shuffle(clothingQueue);
@@ -69,6 +77,21 @@ public class ClosetTaskManager : MonoBehaviour
             if (uiWithHints != null) uiWithHints.SetActive(false);
             if (finalUi != null) finalUi.SetActive(true);
         }
+    }
+
+    private void SetSceneToCompletedState()
+    {
+        if (uiWithHints != null) uiWithHints.SetActive(false);
+        if (finalUi != null) finalUi.SetActive(true);
+
+        foreach (GameObject item in clothingItems)
+            item.SetActive(false);
+
+        foreach (GameObject item in organizedVersions)
+            item.SetActive(true);
+
+        foreach (GameObject item in collectables)
+            item.SetActive(false);
     }
 
     void Shuffle(List<GameObject> list)
