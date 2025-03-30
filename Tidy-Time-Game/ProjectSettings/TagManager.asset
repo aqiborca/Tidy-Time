@@ -15,6 +15,7 @@ TagManager:
   - Trash
   - SceneBorder
   - TrashBin
+  - Fish
   layers:
   - Default
   - TransparentFX
