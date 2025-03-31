@@ -607,7 +607,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.49975586, y: 25.053482}
+  m_Offset: {x: 0.49975586, y: -33.84069}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -618,7 +618,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1956.2014, y: 314.45657}
+  m_Size: {x: 1956.2014, y: 128.71336}
   m_EdgeRadius: 0
 --- !u!1 &544788183
 GameObject:
@@ -934,7 +934,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 5.0996246, y: 243.98785}
+  m_Offset: {x: -33.408173, y: 243.98785}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -945,7 +945,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 187.24002, y: 1161.024}
+  m_Size: {x: 110.22443, y: 1161.024}
   m_EdgeRadius: 0
 --- !u!1 &730129679
 GameObject:
@@ -995,6 +995,7 @@ GameObject:
   - component: {fileID: 766197605}
   - component: {fileID: 766197608}
   - component: {fileID: 766197609}
+  - component: {fileID: 766197610}
   m_Layer: 6
   m_Name: Trash_2
   m_TagString: Trash
@@ -1011,7 +1012,7 @@ Transform:
   m_GameObject: {fileID: 766197603}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.904414, y: -0.5099539, z: 2.5646663}
+  m_LocalPosition: {x: -4.46, y: -0.31, z: 2.5646663}
   m_LocalScale: {x: 0.30000004, y: 0.30000004, z: 0.30000004}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1338,6 +1339,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &766197610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766197603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: Trash_2
 --- !u!1 &1012501619
 GameObject:
   m_ObjectHideFlags: 0
@@ -1461,6 +1475,7 @@ GameObject:
   - component: {fileID: 1020358943}
   - component: {fileID: 1020358946}
   - component: {fileID: 1020358947}
+  - component: {fileID: 1020358948}
   m_Layer: 6
   m_Name: Trash_3
   m_TagString: Trash
@@ -1477,7 +1492,7 @@ Transform:
   m_GameObject: {fileID: 1020358941}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.2879899, y: -0.3429921, z: 2.5646663}
+  m_LocalPosition: {x: -2.96, y: -0.19, z: 2.5646663}
   m_LocalScale: {x: 0.30000004, y: 0.30000004, z: 0.30000004}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1765,6 +1780,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &1020358948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020358941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: Trash_3
 --- !u!1 &1059155334
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,7 +2352,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 5.0996246, y: 243.98785}
+  m_Offset: {x: 47.005054, y: 243.98785}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2335,7 +2363,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 187.24002, y: 1161.024}
+  m_Size: {x: 103.42916, y: 1161.024}
   m_EdgeRadius: 0
 --- !u!1 &1778733571
 GameObject:
@@ -2428,6 +2456,7 @@ GameObject:
   - component: {fileID: 1837032865}
   - component: {fileID: 1837032868}
   - component: {fileID: 1837032869}
+  - component: {fileID: 1837032870}
   m_Layer: 6
   m_Name: Trash_1
   m_TagString: Trash
@@ -2444,7 +2473,7 @@ Transform:
   m_GameObject: {fileID: 1837032863}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.938491, y: 0.4612648, z: 2.5646663}
+  m_LocalPosition: {x: -3.88, y: 0.87, z: 2.5646663}
   m_LocalScale: {x: 0.35000002, y: 0.35000002, z: 0.35000002}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2788,6 +2817,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &1837032870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837032863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: Trash_1
 --- !u!1 &2064903159
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class CollectibleItem : MonoBehaviour
 {
-    public string itemName = "Item"; // for debugging
-    public FishManager fishManager;  // Reference to FishManager
+    public string itemID = "Item"; // Item tracking
+    public FishManager fishManager;  // Reference to FishManager (for letters?)
 
     void OnMouseDown()
     {
-        Debug.Log(itemName + " collected");
-        
+        Debug.Log(itemID + " collected");
+
+        ItemCollectionTracker.MarkCollected(itemID);
+
         // Notify FishManager that a letter was collected
         if (fishManager != null)
         {

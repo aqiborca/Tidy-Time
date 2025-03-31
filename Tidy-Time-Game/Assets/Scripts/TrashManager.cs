@@ -53,6 +53,27 @@ public class TrashManager : MonoBehaviour
         {
             Debug.LogError("ChoreManager instance is null in TrashManager!");
         }
+
+        // Enable trash pieces that have been collected from other scenes
+        GameObject[] allTrash = GameObject.FindGameObjectsWithTag("Trash");
+
+        foreach (GameObject trash in allTrash)
+        {
+            ItemsIDTracking idTracker = trash.GetComponent<ItemsIDTracking>();
+            if (idTracker != null)
+            {
+                if (ItemCollectionTracker.IsCollected(idTracker.itemID))
+                {
+                    trash.SetActive(true);
+                    Debug.Log(idTracker.itemID + " was collected — showing trash piece.");
+                }
+                else
+                {
+                    trash.SetActive(false);
+                    Debug.Log(idTracker.itemID + " not collected — hiding trash piece");
+                }
+            }
+        }
     }
 
     public void NotifyTrashCompleted()

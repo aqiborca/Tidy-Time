@@ -26,6 +26,7 @@ public class FishManager : MonoBehaviour
     private int lettersCollected = 0;
     private bool isFeedFishCompleted = false;
 
+
     void Start()
     {
         // Check if the task was completed through ChoreManager
@@ -40,15 +41,29 @@ public class FishManager : MonoBehaviour
             completionPanel.SetActive(false);
         }
 
-        // Only show fish food if closet chore is done
-        if (ChoreManager.Instance != null && ChoreManager.Instance.IsChoreCompleted("organizecloset") && !ChoreManager.Instance.IsChoreCompleted("feedfish"))
+        // Enable fish food in scene if it was collected from closet
+        if (fishFood != null)
         {
-            fishFood.SetActive(true);
+            ItemsIDTracking idTracker = fishFood.GetComponent<ItemsIDTracking>();
+            if (idTracker != null)
+            {
+                string id = idTracker.itemID;
+
+                if (ItemCollectionTracker.IsCollected(id) && !isFeedFishCompleted)
+                {
+                    fishFood.SetActive(true);
+                }
+                else
+                {
+                    fishFood.SetActive(false);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("fishFood is missing ItemsIDTracking");
+            }
         }
-        else
-        {
-            fishFood.SetActive(false);
-        }
+
 
         // Set initial states
         fishSmall.SetActive(true);
@@ -79,7 +94,7 @@ public class FishManager : MonoBehaviour
 
         if (clickCount < clicksToBurp)
         {
-            // Grow fish slightly (optional visual)
+            // Grow fish slightly 
             fishBig.transform.localScale *= 1.1f;
         }
         else
