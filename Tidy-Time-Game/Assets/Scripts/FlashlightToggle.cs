@@ -48,6 +48,12 @@ public class FlashlightToggle : MonoBehaviour
         }
         if (!isFading)
             StartCoroutine(FadeObject(1f));
+
+        if (MonsterSpawnManager.Instance != null && MonsterSpawnManager.Instance.IsMonsterActive())
+        {
+            MonsterSpawnManager.Instance.ScareAwayMonster();
+            Debug.Log("[Flashlight] Monster scared away!");
+        }
     }
 
     private void OnButtonReleased()

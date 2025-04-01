@@ -8,12 +8,6 @@ public class SaveManager : MonoBehaviour
     //dictionary to store plushie head positions
     private Dictionary<string, Vector3> plushiePositions = new Dictionary<string, Vector3>();
 
-    //flag to mark that the fish feeding task has been completed
-    public bool fishFeedingCompleted = false;
-
-    //dictionary to store whether each letter has been collected
-    private Dictionary<string, bool> letterCollected = new Dictionary<string, bool>();
-
     void Awake()
     {
         if (Instance == null)
@@ -43,19 +37,4 @@ public class SaveManager : MonoBehaviour
         return defaultPosition;
     }
 
-    //methods for saving letter collection state
-    public void SetLetterCollected(string letterID, bool collected)
-    {
-        if (letterCollected.ContainsKey(letterID))
-            letterCollected[letterID] = collected;
-        else
-            letterCollected.Add(letterID, collected);
-    }
-
-    public bool GetLetterCollected(string letterID)
-    {
-        if (letterCollected.ContainsKey(letterID))
-            return letterCollected[letterID];
-        return false; 
-    }
 }
