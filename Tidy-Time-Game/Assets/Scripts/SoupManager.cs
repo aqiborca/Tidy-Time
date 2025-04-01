@@ -28,6 +28,31 @@ public class SoupManager : MonoBehaviour
         {
             letterRandomizer.RandomizeLetters(false);
         }
+
+        // Hide uncollected letters (B, U, R, P)
+        string[] collectedLetters = { "letterB", "letterU", "letterR", "letterP" };
+
+        foreach (string letterID in collectedLetters)
+        {
+            DraggableLetter[] allLetters = FindObjectsOfType<DraggableLetter>();
+            foreach (DraggableLetter letter in allLetters)
+            {
+                ItemsIDTracking idTracker = letter.GetComponent<ItemsIDTracking>();
+                if (idTracker != null && idTracker.itemID == letterID)
+                {
+                    if (!ItemCollectionTracker.IsCollected(letterID))
+                    {
+                        // Hide the letter if it hasn't been collected yet
+                        letter.gameObject.SetActive(false);
+                        Debug.Log(letterID + " not collected — hiding");
+                    }
+                    else
+                    {
+                        Debug.Log(letterID + " was collected — showing");
+                    }
+                }
+            }
+        }
     }
 
     public void CheckForCompletion()
