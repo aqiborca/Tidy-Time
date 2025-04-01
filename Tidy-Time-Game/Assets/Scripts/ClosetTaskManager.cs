@@ -35,6 +35,17 @@ public class ClosetTaskManager : MonoBehaviour
 
         if (clothingQueue.Count > 0)
             clothingQueue[0].SetActive(true);
+
+        foreach (GameObject item in collectables)
+        {
+            ItemsIDTracking idTracker = item.GetComponent<ItemsIDTracking>();
+            if (idTracker != null && ItemCollectionTracker.IsCollected(idTracker.itemID))
+            {
+                item.SetActive(false);
+                Debug.Log("Hiding already collected item - " + idTracker.itemID);
+            }
+        }
+
     }
 
     void Update()

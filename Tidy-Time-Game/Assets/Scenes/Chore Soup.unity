@@ -1641,6 +1641,7 @@ GameObject:
   - component: {fileID: 486644981}
   - component: {fileID: 486644983}
   - component: {fileID: 486644984}
+  - component: {fileID: 486644985}
   m_Layer: 5
   m_Name: Letter U
   m_TagString: Untagged
@@ -1738,6 +1739,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &486644985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486644979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: letterU
 --- !u!1 &510163717
 GameObject:
   m_ObjectHideFlags: 0
@@ -3482,6 +3496,7 @@ GameObject:
   - component: {fileID: 1168244865}
   - component: {fileID: 1168244867}
   - component: {fileID: 1168244868}
+  - component: {fileID: 1168244869}
   m_Layer: 5
   m_Name: Letter P
   m_TagString: Untagged
@@ -3579,6 +3594,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1168244869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168244863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: letterP
 --- !u!1 &1209065084
 GameObject:
   m_ObjectHideFlags: 0
@@ -4163,6 +4191,7 @@ GameObject:
   - component: {fileID: 1458576118}
   - component: {fileID: 1458576120}
   - component: {fileID: 1458576121}
+  - component: {fileID: 1458576122}
   m_Layer: 5
   m_Name: Letter B
   m_TagString: Untagged
@@ -4260,6 +4289,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1458576122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458576116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: letterB
 --- !u!1 &1495911758
 GameObject:
   m_ObjectHideFlags: 0
@@ -6005,6 +6047,7 @@ GameObject:
   - component: {fileID: 2091150945}
   - component: {fileID: 2091150947}
   - component: {fileID: 2091150948}
+  - component: {fileID: 2091150949}
   m_Layer: 5
   m_Name: Letter R
   m_TagString: Untagged
@@ -6102,6 +6145,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2091150949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091150943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4895226600b3f834da157a8f889e38c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: letterR
 --- !u!1 &2097346115
 GameObject:
   m_ObjectHideFlags: 0
