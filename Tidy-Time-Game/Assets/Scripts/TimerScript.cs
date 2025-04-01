@@ -1,7 +1,3 @@
-/*
-This script is for counting and saving timer
-Attached to: TimerManager Object
-*/
 using UnityEngine;
 using TMPro;
 using System.Collections;
@@ -59,10 +55,10 @@ public class TimerScript : MonoBehaviour
         {
             if (!isPaused) // Only update the timer if it's not paused
             {
-                yield return new WaitForSeconds(0.015f); // Wait for 0.5 second
+                yield return new WaitForSeconds(0.015f); // Wait for 0.015 seconds
 
-                // Increment the time by 30 seconds
-                currentSecond ++;
+                // Increment the time by 1 second
+                currentSecond++;
                 if (currentSecond >= 60)
                 {
                     currentSecond = 0;
@@ -74,7 +70,7 @@ public class TimerScript : MonoBehaviour
                     currentHour++;
                 }
 
-                // Stop the timer if it reaches 8:00:00 PM
+                // Stop the timer if it reaches 9:00:00 PM
                 if (currentHour >= 9 && currentMinute >= 0 && currentSecond >= 0)
                 {
                     isRunning = false;
@@ -112,7 +108,6 @@ public class TimerScript : MonoBehaviour
     // Sets the timer to a saved time (used when loading a scene)
     public void SetTime(int hour, int minute, int second, TextMeshProUGUI newTimeText = null)
     {
-
         // Stop running coroutines to prevent duplicates
         StopAllCoroutines();
 
@@ -177,9 +172,20 @@ public class TimerScript : MonoBehaviour
         if (textObject != null)
         {
             timeText = textObject.GetComponent<TextMeshProUGUI>();
-            if (timeText == null)
-            {
-            }
         }
+    }
+
+    // Restart the timer by resetting the time to 4:00:00 PM and starting the timer again
+    public void RestartTimer()
+    {
+        // Stop any existing coroutines to prevent duplicates
+        StopAllCoroutines();
+
+        // Reset time to 4:00:00 PM
+        SetTime(4, 0, 0);
+
+        // Restart the timer coroutine
+        isRunning = true;
+        StartCoroutine(UpdateTimer());
     }
 }

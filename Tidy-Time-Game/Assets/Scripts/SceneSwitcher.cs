@@ -16,6 +16,15 @@ public class SceneSwitcher : MonoBehaviour
 
     public void LaunchBedroom()
     {
+        // Set the time to 4:00:00 PM every time LaunchBedroom is called
+        TimerScript timer = FindObjectOfType<TimerScript>();
+        if (timer != null)
+        {
+            timer.SetTime(4, 0, 0); // Set to 4 PM
+            timer.RestartTimer(); // Restart the timer every time this method is called
+        }
+
+        // Load the Bedroom scene
         SceneManager.LoadSceneAsync(2);
     }
 
