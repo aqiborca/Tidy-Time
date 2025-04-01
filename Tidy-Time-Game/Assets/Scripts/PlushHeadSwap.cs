@@ -21,41 +21,48 @@ public class PlushHeadSwap : MonoBehaviour
     private List<Transform> availableBodies = new List<Transform>();
     private Dictionary<Transform, PlushHeadSwap> bodyToHeadMap = new Dictionary<Transform, PlushHeadSwap>();
     private static List<Transform> occupiedBodies = new List<Transform>();
-    private static bool positionsAssigned = false;
+    private static bool positionsInitialized = false;
 
-    void Start()
+    void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         polyCollider = GetComponent<PolygonCollider2D>();
+    }
 
+    void Start()
+    {
         InitializeBodies();
 
-        if (!positionsAssigned)
+        if (!positionsInitialized)
         {
             occupiedBodies.Clear();
-            positionsAssigned = true;
+            positionsInitialized = true;
         }
-        
+
         if (SaveManager.Instance != null)
         {
             Vector3 savedPosition = SaveManager.Instance.GetPlushiePosition(gameObject.name, Vector3.zero);
             if (savedPosition != Vector3.zero)
             {
-                transform.position = savedPosition;
-                startPosition = savedPosition;
-                
+                bool positionValid = false;
                 foreach (var body in availableBodies)
                 {
-                    if (body != null && Vector3.Distance(savedPosition, body.position) < 0.1f)
+                    if (body != null && Vector3.Distance(savedPosition, body.position) < snapThreshold)
                     {
-                        if (!occupiedBodies.Contains(body))
-                        {
-                            occupiedBodies.Add(body);
-                            bodyToHeadMap[body] = this;
-                        }
+                        positionValid = true;
                         break;
                     }
+                }
+
+                if (positionValid)
+                {
+                    transform.position = savedPosition;
+                    startPosition = savedPosition;
+                }
+                else
+                {
+                    AssignRandomPosition();
                 }
             }
             else
@@ -67,7 +74,8 @@ public class PlushHeadSwap : MonoBehaviour
         {
             AssignRandomPosition();
         }
-        
+
+        UpdateBodyMapping(this);
         CheckAndUpdateLockStatus(true);
     }
 
@@ -90,16 +98,13 @@ public class PlushHeadSwap : MonoBehaviour
     {
         if (availableBodies.Count == 0) return;
 
-        // Create a list of all possible bodies (excluding correct body)
         List<Transform> possibleBodies = new List<Transform>();
         foreach (var body in availableBodies)
         {
             if (body == null) continue;
-            if (body == correctBody) continue;
             possibleBodies.Add(body);
         }
 
-        // Remove already occupied bodies
         List<Transform> unoccupiedBodies = new List<Transform>();
         foreach (var body in possibleBodies)
         {
@@ -109,30 +114,46 @@ public class PlushHeadSwap : MonoBehaviour
             }
         }
 
-        // If no unoccupied bodies left (shouldn't happen with proper setup)
         if (unoccupiedBodies.Count == 0)
         {
-            // Place near a random body
-            Transform fallbackBody = availableBodies[Random.Range(0, availableBodies.Count)];
-            startPosition = fallbackBody.position + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-            transform.position = startPosition;
-            return;
+            unoccupiedBodies = new List<Transform>(possibleBodies);
         }
 
-        // Select a random unoccupied body
-        int randomIndex = Random.Range(0, unoccupiedBodies.Count);
-        Transform selectedBody = unoccupiedBodies[randomIndex];
-        
-        if (selectedBody != null)
+        if (unoccupiedBodies.Count > 0)
         {
-            transform.position = selectedBody.position;
-            startPosition = selectedBody.position;
+            int randomIndex = Random.Range(0, unoccupiedBodies.Count);
+            Transform selectedBody = unoccupiedBodies[randomIndex];
             
-            occupiedBodies.Add(selectedBody);
-            bodyToHeadMap[selectedBody] = this;
+            if (selectedBody != null)
+            {
+                if (occupiedBodies.Contains(selectedBody))
+                {
+                    PlushHeadSwap otherHead = bodyToHeadMap[selectedBody];
+                    otherHead.startPosition = GetRandomPositionNearby(selectedBody.position);
+                    otherHead.transform.position = otherHead.startPosition;
+                    bodyToHeadMap.Remove(selectedBody);
+                }
+
+                transform.position = selectedBody.position;
+                startPosition = selectedBody.position;
+                
+                occupiedBodies.Add(selectedBody);
+                bodyToHeadMap[selectedBody] = this;
+            }
+        }
+        else
+        {
+            Transform fallbackBody = availableBodies[Random.Range(0, availableBodies.Count)];
+            startPosition = GetRandomPositionNearby(fallbackBody.position);
+            transform.position = startPosition;
         }
 
         isLocked = false;
+    }
+
+    private Vector3 GetRandomPositionNearby(Vector3 basePosition)
+    {
+        return basePosition + new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
     }
 
     private void OnMouseEnter()
@@ -319,29 +340,56 @@ public class PlushHeadSwap : MonoBehaviour
 
     private void UpdateBodyMapping(PlushHeadSwap head)
     {
-        foreach (var pair in new Dictionary<Transform, PlushHeadSwap>(bodyToHeadMap))
+        List<Transform> toRemove = new List<Transform>();
+        foreach (var pair in bodyToHeadMap)
         {
             if (pair.Value == head)
             {
-                bodyToHeadMap.Remove(pair.Key);
-                if (occupiedBodies.Contains(pair.Key))
-                {
-                    occupiedBodies.Remove(pair.Key);
-                }
-                break;
+                toRemove.Add(pair.Key);
             }
         }
+        foreach (var key in toRemove)
+        {
+            bodyToHeadMap.Remove(key);
+            occupiedBodies.Remove(key);
+        }
+
+        Transform closestBody = null;
+        float closestDistance = float.MaxValue;
 
         foreach (var body in availableBodies)
         {
-            if (body != null && Vector3.Distance(head.transform.position, body.position) < 0.1f)
+            if (body == null) continue;
+            
+            float distance = Vector3.Distance(head.transform.position, body.position);
+            if (distance < snapThreshold && distance < closestDistance)
             {
-                bodyToHeadMap[body] = head;
-                if (!occupiedBodies.Contains(body))
-                {
-                    occupiedBodies.Add(body);
-                }
-                break;
+                closestDistance = distance;
+                closestBody = body;
+            }
+        }
+
+        if (closestBody != null)
+        {
+            if (bodyToHeadMap.ContainsKey(closestBody))
+            {
+                PlushHeadSwap otherHead = bodyToHeadMap[closestBody];
+                otherHead.startPosition = GetRandomPositionNearby(closestBody.position);
+                otherHead.transform.position = otherHead.startPosition;
+                bodyToHeadMap.Remove(closestBody);
+                occupiedBodies.Remove(closestBody);
+            }
+
+            bodyToHeadMap[closestBody] = head;
+            if (!occupiedBodies.Contains(closestBody))
+            {
+                occupiedBodies.Add(closestBody);
+            }
+
+            if (closestDistance < lockThreshold)
+            {
+                head.transform.position = closestBody.position;
+                head.startPosition = closestBody.position;
             }
         }
     }
@@ -404,6 +452,6 @@ public class PlushHeadSwap : MonoBehaviour
 
     private void OnDestroy()
     {
-        positionsAssigned = false;
+        positionsInitialized = false;
     }
 }

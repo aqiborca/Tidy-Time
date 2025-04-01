@@ -16,6 +16,18 @@ public class SceneSwitcher : MonoBehaviour
 
     public void LaunchBedroom()
     {
+        // Reset all chores to incomplete
+        ChoreManager choreManager = ChoreManager.Instance;
+        if (choreManager != null)
+        {
+            choreManager.isAlphabetSoupCompleted = false;
+            choreManager.isSwapPlushiesCompleted = false;
+            choreManager.isMathHomeworkCompleted = false;
+            choreManager.isGarbageCompleted = false;
+            choreManager.isOrganizeClosetCompleted = false;
+            choreManager.isFeedFishCompleted = false;
+        }
+
         // Set the time to 4:00:00 PM every time LaunchBedroom is called
         TimerScript timer = FindObjectOfType<TimerScript>();
         if (timer != null)
