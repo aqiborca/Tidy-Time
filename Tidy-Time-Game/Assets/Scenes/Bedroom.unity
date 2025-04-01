@@ -2261,6 +2261,52 @@ PolygonCollider2D:
       - {x: -2.5425391, y: -0.14904666}
       - {x: -1.8940023, y: 1.1380476}
   m_UseDelaunayMesh: 0
+--- !u!1 &735026815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 735026817}
+  - component: {fileID: 735026816}
+  m_Layer: 0
+  m_Name: MonsterManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &735026816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735026815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03841c7b20d002049babf61da272a621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterIsActive: 0
+  monsterSpawnSound: {fileID: 8300000, guid: 1694ada5c6bad2d44a54c6a249fb2ede, type: 3}
+--- !u!4 &735026817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735026815}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6975766, y: -0.29804882, z: 0.14766867}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &751210150
 GameObject:
   m_ObjectHideFlags: 0
@@ -6757,3 +6803,4 @@ SceneRoots:
   - {fileID: 376328515}
   - {fileID: 1094274732}
   - {fileID: 1169100598}
+  - {fileID: 735026817}
