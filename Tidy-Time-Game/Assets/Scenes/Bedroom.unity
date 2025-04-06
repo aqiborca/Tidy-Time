@@ -3457,9 +3457,7 @@ MonoBehaviour:
   deceleration: 25
   playerRigidBody: {fileID: 1032690929}
   escPanel: {fileID: 118973713}
-  choresPanel: {fileID: 0}
   timerScript: {fileID: 1198321245}
-  bedroomSpawnPosition: {x: -5, y: 70, z: 0}
 --- !u!61 &1032690931
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3583,7 +3581,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You must complete your ALL of your chores before you call Mom
+  m_text: You must complete all of your chores before 9pm
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3618,7 +3616,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -3646,7 +3644,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 4.3160477, y: -22.299335, z: 5.7546616, w: -22.299358}
+  m_margin: {x: 4.3160477, y: -20.034908, z: 5.7546616, w: -17.4558}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3913,7 +3911,7 @@ Transform:
   m_GameObject: {fileID: 1169100596}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5555646, y: -0.13526401, z: 504.3155}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5225,8 +5223,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -767.6025, y: 231.59943}
-  m_SizeDelta: {x: -1718.8772, y: -975.5486}
+  m_AnchoredPosition: {x: -771, y: 221}
+  m_SizeDelta: {x: -1733.13, y: -983.41}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1644414619
 MonoBehaviour:
