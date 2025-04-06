@@ -13,6 +13,7 @@ public class PersistentMusic : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             audioSource = GetComponent<AudioSource>();
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -20,26 +21,24 @@ public class PersistentMusic : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnDestroy()
     {
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
-        // Destroy music in main menu (0), call mom scene (10), or jumpscare scene (12)
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        int sceneIndex = scene.buildIndex;
+
+        // Check if we're in a scene where music should stop
         if (sceneIndex == 0 || sceneIndex == 10 || sceneIndex == 12)
         {
-            // Fade out music before destroying
-            if (audioSource != null && audioSource.isPlaying)
+            // Stop immediately or start fading out
+            if (audioSource != null)
             {
-                audioSource.volume = Mathf.MoveTowards(audioSource.volume, 0f, Time.deltaTime);
-                if (audioSource.volume <= 0.01f)
-                {
-                    Destroy(gameObject);
-                }
+                audioSource.Stop();
             }
-            else
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 }

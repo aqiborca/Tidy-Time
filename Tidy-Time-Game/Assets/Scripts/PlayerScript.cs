@@ -107,21 +107,31 @@ public class PlayerScript : MonoBehaviour
         // Save the player's position to the DataManager
         if (DataManager.Instance != null)
         {
-            DataManager.Instance.SetPlayerPosition(transform.position);
+            // Get current position but force Z=70
+            Vector3 positionToSave = new Vector3(transform.position.x, transform.position.y, 70);
+            DataManager.Instance.SetPlayerPosition(positionToSave);
         }
     }
-
     // Player Position Getter
     private void GetPlayerPosition()
     {
+        // Default position with Z=70
+        Vector3 defaultPosition = new Vector3(-5, 0, 70);
+
         // Load the player's position from the DataManager
         if (DataManager.Instance != null)
         {
             Vector3 savedPosition = DataManager.Instance.GetPlayerPosition();
-            transform.position = savedPosition;
+
+            // Only use saved X and Y coordinates, force Z=70
+            transform.position = new Vector3(savedPosition.x, savedPosition.y, 70);
+        }
+        else
+        {
+            // If no DataManager, use default position with Z=70
+            transform.position = defaultPosition;
         }
     }
-
     // Save the current time before changing scenes
     private void SaveCurrentTime()
     {
@@ -170,6 +180,16 @@ public class PlayerScript : MonoBehaviour
             {
                 canMove = true; // Enable movement when panel is inactive
             }
+        }
+    }
+    private void OnDestroy()
+    {
+        // When the player object is destroyed (like when changing scenes),
+        // make sure we're not leaving the game in a paused state
+        if (escPanel != null && escPanel.activeSelf)
+        {
+            escPanel.SetActive(false);
+            Time.timeScale = 1f;
         }
     }
 }

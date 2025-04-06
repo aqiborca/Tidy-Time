@@ -67,9 +67,37 @@ public class MonsterSpawnManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Check if the loaded scene is "Call Mom" (Scene 10)
+        if (scene.buildIndex == 10)
+        {
+            CleanUpForCallMom();
+            return;
+        }
+
         // Reconnect references if needed when scene changes
         timerScript = FindObjectOfType<TimerScript>();
         sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+    }
+
+    void CleanUpForCallMom()
+    {
+        // Stop any active monster sounds
+        if (monsterAudioSource != null && monsterAudioSource.isPlaying)
+        {
+            monsterAudioSource.Stop();
+        }
+
+        // Stop all coroutines
+        StopAllCoroutines();
+
+        // Destroy the audio source game object if it exists
+        if (monsterAudioSource != null)
+        {
+            Destroy(monsterAudioSource.gameObject);
+        }
+
+        // Destroy this manager
+        Destroy(gameObject);
     }
 
     IEnumerator MonsterSpawnLoop()

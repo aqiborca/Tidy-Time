@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class TimerScript : MonoBehaviour
 {
@@ -20,11 +21,37 @@ public class TimerScript : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject); // Persist across scene changes
+            SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to scene changes
             ReassignTimeText(); // Assign timeText using the "Timer" tag
         }
         else
         {
             Destroy(gameObject); // Destroy duplicate instances
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe to prevent memory leaks
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Check if we're in the main menu (assuming scene build index 0 is main menu)
+        if (scene.buildIndex == 0)
+        {
+            ResetTimerToDefault();
+        }
+        else
+        {
+            // Reassign the time text reference when loading any other scene
+            ReassignTimeText();
+            if (!isRunning)
+            {
+                // If timer was stopped (e.g., reached 9 PM), restart it for new game
+                RestartTimer();
+            }
         }
     }
 
@@ -85,6 +112,19 @@ public class TimerScript : MonoBehaviour
                 yield return null; // Wait for the next frame if paused
             }
         }
+    }
+
+    // Resets timer to 4:00:00 PM without restarting it
+    public void ResetTimerToDefault()
+    {
+        StopAllCoroutines();
+        currentHour = 4;
+        currentMinute = 0;
+        currentSecond = 0;
+        isRunning = false; // Don't run in main menu
+        isPaused = false;
+        ReassignTimeText();
+        UpdateTimeText();
     }
 
     // Returns the current hour (used for saving)
@@ -182,10 +222,17 @@ public class TimerScript : MonoBehaviour
         StopAllCoroutines();
 
         // Reset time to 4:00:00 PM
-        SetTime(4, 0, 0);
+        currentHour = 4;
+        currentMinute = 0;
+        currentSecond = 0;
+        isRunning = true;
+        isPaused = false;
+
+        // Update the UI
+        ReassignTimeText();
+        UpdateTimeText();
 
         // Restart the timer coroutine
-        isRunning = true;
         StartCoroutine(UpdateTimer());
     }
 }

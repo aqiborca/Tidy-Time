@@ -16,12 +16,32 @@ public class SceneSwitcher : MonoBehaviour
 
     public void LaunchBedroom()
     {
-        // Reset all chore states
-        ResetChoreManager();
-        
-        // Reset timer
-        ResetTimer();
-        
+        // Reset all chores to incomplete
+        ChoreManager choreManager = ChoreManager.Instance;
+        if (choreManager != null)
+        {
+            choreManager.isAlphabetSoupCompleted = false;
+            choreManager.isSwapPlushiesCompleted = false;
+            choreManager.isMathHomeworkCompleted = false;
+            choreManager.isGarbageCompleted = false;
+            choreManager.isOrganizeClosetCompleted = false;
+            choreManager.isFeedFishCompleted = false;
+        }
+
+        // Reset the timer
+        TimerScript timer = FindObjectOfType<TimerScript>();
+        if (timer != null)
+        {
+            timer.SetTime(4, 0, 0); // Set to 4 PM
+            timer.RestartTimer();
+        }
+
+        // Clear the saved player position to ensure spawn at default position
+        if (DataManager.Instance != null)
+        {
+            DataManager.Instance.ClearPlayerPosition();
+        }
+
         // Destroy all persistent objects except essential managers
         DestroyAllPersistentObjects();
 
@@ -107,6 +127,16 @@ public class SceneSwitcher : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        // Reset all game state
+        if (DataManager.Instance != null)
+        {
+            DataManager.Instance.ClearAllData();
+        }
+
+        // Reset time scale
+        Time.timeScale = 1f;
+
+        // Load the main menu
         SceneManager.LoadSceneAsync(0);
     }
 
@@ -159,18 +189,16 @@ public class SceneSwitcher : MonoBehaviour
 
     private void DestroyAllPersistentObjects()
     {
-        // Get all game objects in the DontDestroyOnLoad scene
         GameObject[] allObjects = Object.FindObjectsOfType<GameObject>();
-        
+
         foreach (GameObject obj in allObjects)
         {
             // Skip essential system objects
-            if (obj == gameObject) continue; // Skip this SceneSwitcher
+            if (obj == gameObject) continue;
             if (obj.GetComponent<DataManager>() != null) continue;
             if (obj.GetComponent<ChoreManager>() != null) continue;
             if (obj.GetComponent<TimerScript>() != null) continue;
 
-            // Check if the object is in the DontDestroyOnLoad scene
             if (obj.scene.buildIndex == -1)
             {
                 Destroy(obj);

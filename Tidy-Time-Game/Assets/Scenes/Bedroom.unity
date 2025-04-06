@@ -3457,7 +3457,9 @@ MonoBehaviour:
   deceleration: 25
   playerRigidBody: {fileID: 1032690929}
   escPanel: {fileID: 118973713}
+  choresPanel: {fileID: 0}
   timerScript: {fileID: 1198321245}
+  bedroomSpawnPosition: {x: -5, y: 70, z: 0}
 --- !u!61 &1032690931
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4208,7 +4210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPosition: {x: -7, y: 1.5, z: 0}
-  currentHour: 6
+  currentHour: 4
   currentMinute: 0
   currentSecond: 0
 --- !u!4 &1247065590
