@@ -7,18 +7,18 @@ public class MonsterSpawnManager : MonoBehaviour
     public static MonsterSpawnManager Instance;
 
     public bool monsterIsActive = false;
-    public AudioClip monsterSpawnSound;
-    private AudioSource audioSource;
+    public AudioSource monsterAudioSource; // Changed from AudioClip to AudioSource
 
     // Spawn timing variables
-    private float initialSpawnCooldownMin = 30f;  // Starting min time between spawns
-    private float initialSpawnCooldownMax = 60f;  // Starting max time between spawns
-    private float finalSpawnCooldownMin = 10f;    // Final min time between spawns
-    private float finalSpawnCooldownMax = 20f;    // Final max time between spawns
-    private float monsterSpawnDuration = 20f;     // Time monster stays active before game over
+    private float initialSpawnCooldownMin = 30f;
+    private float initialSpawnCooldownMax = 60f;
+    private float finalSpawnCooldownMin = 10f;
+    private float finalSpawnCooldownMax = 20f;
+    private float monsterSpawnDuration = 20f;
     private bool gameOverTriggered = false;
 
     private TimerScript timerScript;
+    private SceneSwitcher sceneSwitcher;
 
     void Awake()
     {
@@ -26,6 +26,14 @@ public class MonsterSpawnManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            // Ensure the AudioSource persists and is configured properly
+            if (monsterAudioSource != null)
+            {
+                DontDestroyOnLoad(monsterAudioSource.gameObject);
+                monsterAudioSource.volume = 0.3f; // Set volume to 0.3
+                monsterAudioSource.playOnAwake = false;
+            }
         }
         else
         {
@@ -36,23 +44,40 @@ public class MonsterSpawnManager : MonoBehaviour
     void Start()
     {
         timerScript = FindObjectOfType<TimerScript>();
+        sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+        
         if (timerScript == null)
         {
             Debug.LogError("TimerScript not found.");
             return;
         }
 
-        audioSource = gameObject.AddComponent<AudioSource>();
         StartCoroutine(MonsterSpawnLoop());
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Reconnect references if needed when scene changes
+        timerScript = FindObjectOfType<TimerScript>();
+        sceneSwitcher = FindObjectOfType<SceneSwitcher>();
     }
 
     IEnumerator MonsterSpawnLoop()
     {
-        yield return new WaitForSeconds(3f); // Wait for timer to initialize
+        yield return new WaitForSeconds(3f);
 
         while (!gameOverTriggered)
         {
-            // Calculate current spawn cooldown based on game progress (4PM to 9PM)
             float progress = Mathf.Clamp01((timerScript.GetCurrentHour() - 4 + timerScript.GetCurrentMinute() / 60f) / 5f);
             float currentMinCooldown = Mathf.Lerp(initialSpawnCooldownMin, finalSpawnCooldownMin, progress);
             float currentMaxCooldown = Mathf.Lerp(initialSpawnCooldownMax, finalSpawnCooldownMax, progress);
@@ -65,7 +90,6 @@ public class MonsterSpawnManager : MonoBehaviour
 
             StartCoroutine(SpawnMonsterRoutine());
 
-            // Wait until the monster is gone before starting next loop
             while (monsterIsActive && !gameOverTriggered)
             {
                 yield return null;
@@ -78,10 +102,9 @@ public class MonsterSpawnManager : MonoBehaviour
         monsterIsActive = true;
 
         Debug.Log("[Monster Manager] Monster has spawned!");
-        if (monsterSpawnSound != null)
+        if (monsterAudioSource != null)
         {
-            audioSource.clip = monsterSpawnSound;
-            audioSource.Play();
+            monsterAudioSource.Play();
         }
 
         float timeWaited = 0f;
@@ -90,6 +113,10 @@ public class MonsterSpawnManager : MonoBehaviour
             if (!monsterIsActive)
             {
                 Debug.Log("[Monster Manager] Monster scared away!");
+                if (monsterAudioSource != null && monsterAudioSource.isPlaying)
+                {
+                    monsterAudioSource.Stop();
+                }
                 yield break;
             }
 
@@ -110,16 +137,24 @@ public class MonsterSpawnManager : MonoBehaviour
         if (monsterIsActive)
         {
             monsterIsActive = false;
-            if (audioSource.isPlaying)
+            if (monsterAudioSource != null && monsterAudioSource.isPlaying)
             {
-                audioSource.Stop();
+                monsterAudioSource.Stop();
             }
         }
     }
 
     void TriggerGameOver()
     {
-        SceneManager.LoadScene("Call Mom");
+        if (sceneSwitcher != null)
+        {
+            sceneSwitcher.LoadMonsterJumpscare();
+        }
+        else
+        {
+            Debug.LogWarning("SceneSwitcher not found, loading jumpscare directly");
+            SceneManager.LoadScene(12); // Fallback to direct scene load
+        }
     }
 
     public bool IsMonsterActive()

@@ -93,6 +93,13 @@ public class SceneSwitcher : MonoBehaviour
         SceneManager.LoadSceneAsync(10);
     }
 
+    public void LoadMonsterJumpscare()
+    {
+        SetPlayerPosition();
+        SaveTime();
+        SceneManager.LoadSceneAsync(12);
+    }
+
     public void LoadCredits()
     {
         SceneManager.LoadSceneAsync(11);

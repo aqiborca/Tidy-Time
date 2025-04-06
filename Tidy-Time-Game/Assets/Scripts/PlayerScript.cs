@@ -54,12 +54,11 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (enabled && canMove) // Only move if the script is enabled and movement is allowed
+        if (enabled && canMove && Time.timeScale > 0) // Only move if the script is enabled, movement is allowed, and game isn't paused
         {
             Move();
         }
     }
-
     // Inputs for player movement
     void ProcessInputs()
     {
