@@ -158,6 +158,9 @@ public class PlayerScript : MonoBehaviour
             bool isPanelActive = !escPanel.activeSelf;
             escPanel.SetActive(isPanelActive);
 
+            // Pause or unpause the game
+            Time.timeScale = isPanelActive ? 0f : 1f;
+
             // Stop or resume player movement
             if (isPanelActive)
             {

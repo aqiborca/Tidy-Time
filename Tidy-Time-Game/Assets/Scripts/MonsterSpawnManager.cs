@@ -10,9 +10,12 @@ public class MonsterSpawnManager : MonoBehaviour
     public AudioClip monsterSpawnSound;
     private AudioSource audioSource;
 
-    private float spawnCooldownMin = 30f;  // Min time between spawns
-    private float spawnCooldownMax = 60f;  // Max time between spawns
-    private float monsterSpawnDuration = 20f;  // Time monster stays active before game over
+    // Spawn timing variables
+    private float initialSpawnCooldownMin = 30f;  // Starting min time between spawns
+    private float initialSpawnCooldownMax = 60f;  // Starting max time between spawns
+    private float finalSpawnCooldownMin = 10f;    // Final min time between spawns
+    private float finalSpawnCooldownMax = 20f;    // Final max time between spawns
+    private float monsterSpawnDuration = 20f;     // Time monster stays active before game over
     private bool gameOverTriggered = false;
 
     private TimerScript timerScript;
@@ -43,16 +46,22 @@ public class MonsterSpawnManager : MonoBehaviour
         StartCoroutine(MonsterSpawnLoop());
     }
 
-    // Loop with randomized time between spawns
     IEnumerator MonsterSpawnLoop()
     {
         yield return new WaitForSeconds(3f); // Wait for timer to initialize
 
         while (!gameOverTriggered)
         {
-            float cooldown = Random.Range(spawnCooldownMin, spawnCooldownMax);
-            Debug.Log($"[Monster Manager] Waiting {cooldown:F1} seconds before next monster spawn.");
-            yield return new WaitForSeconds(cooldown);  //Wait a certain amount of time before spawning the monster
+            // Calculate current spawn cooldown based on game progress (4PM to 9PM)
+            float progress = Mathf.Clamp01((timerScript.GetCurrentHour() - 4 + timerScript.GetCurrentMinute() / 60f) / 5f);
+            float currentMinCooldown = Mathf.Lerp(initialSpawnCooldownMin, finalSpawnCooldownMin, progress);
+            float currentMaxCooldown = Mathf.Lerp(initialSpawnCooldownMax, finalSpawnCooldownMax, progress);
+
+            float cooldown = Random.Range(currentMinCooldown, currentMaxCooldown);
+            Debug.Log($"[Monster Manager] Current spawn interval: {currentMinCooldown:F1}-{currentMaxCooldown:F1}s " +
+                     $"(Progress: {progress:P0}). Waiting {cooldown:F1} seconds.");
+            
+            yield return new WaitForSeconds(cooldown);
 
             StartCoroutine(SpawnMonsterRoutine());
 
@@ -64,7 +73,6 @@ public class MonsterSpawnManager : MonoBehaviour
         }
     }
 
-    // Handle monster behaviour when it's active
     IEnumerator SpawnMonsterRoutine()
     {
         monsterIsActive = true;
@@ -79,7 +87,6 @@ public class MonsterSpawnManager : MonoBehaviour
         float timeWaited = 0f;
         while (timeWaited < monsterSpawnDuration)
         {
-            // Stop if monster was scared away with flashlight
             if (!monsterIsActive)
             {
                 Debug.Log("[Monster Manager] Monster scared away!");
@@ -90,7 +97,6 @@ public class MonsterSpawnManager : MonoBehaviour
             timeWaited += 1f;
         }
 
-        // Trigger game over if the monster was not scared away on time
         if (monsterIsActive)
         {
             Debug.Log("[Monster Manager] Monster was not scared away in time! Game Over.");
@@ -99,7 +105,6 @@ public class MonsterSpawnManager : MonoBehaviour
         }
     }
 
-    // Called by flashlight to make the monster go away
     public void ScareAwayMonster()
     {
         if (monsterIsActive)
@@ -114,10 +119,9 @@ public class MonsterSpawnManager : MonoBehaviour
 
     void TriggerGameOver()
     {
-        SceneManager.LoadScene("Call Mom"); // replace with game over scene later
+        SceneManager.LoadScene("Call Mom");
     }
 
-    // Used by other scripts to check if monster is currently active
     public bool IsMonsterActive()
     {
         return monsterIsActive;

@@ -16,30 +16,20 @@ public class SceneSwitcher : MonoBehaviour
 
     public void LaunchBedroom()
     {
-        // Reset all chores to incomplete
-        ChoreManager choreManager = ChoreManager.Instance;
-        if (choreManager != null)
-        {
-            choreManager.isAlphabetSoupCompleted = false;
-            choreManager.isSwapPlushiesCompleted = false;
-            choreManager.isMathHomeworkCompleted = false;
-            choreManager.isGarbageCompleted = false;
-            choreManager.isOrganizeClosetCompleted = false;
-            choreManager.isFeedFishCompleted = false;
-        }
-
-        // Set the time to 4:00:00 PM every time LaunchBedroom is called
-        TimerScript timer = FindObjectOfType<TimerScript>();
-        if (timer != null)
-        {
-            timer.SetTime(4, 0, 0); // Set to 4 PM
-            timer.RestartTimer(); // Restart the timer every time this method is called
-        }
+        // Reset all chore states
+        ResetChoreManager();
+        
+        // Reset timer
+        ResetTimer();
+        
+        // Destroy all persistent objects except essential managers
+        DestroyAllPersistentObjects();
 
         // Load the Bedroom scene
         SceneManager.LoadSceneAsync(2);
     }
 
+    // Other scene switching methods remain the same...
     public void PlayBedroom()
     {
         SetPlayerPosition();
@@ -121,7 +111,7 @@ public class SceneSwitcher : MonoBehaviour
     private void SetPlayerPosition()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        if (player != null && DataManager.Instance != null)
         {
             DataManager.Instance.SetPlayerPosition(player.transform.position);
         }
@@ -130,9 +120,54 @@ public class SceneSwitcher : MonoBehaviour
     private void SaveTime()
     {
         TimerScript timer = FindObjectOfType<TimerScript>();
-        if (timer != null)
+        if (timer != null && DataManager.Instance != null)
         {
             DataManager.Instance.SetTime(timer.GetCurrentHour(), timer.GetCurrentMinute(), timer.GetCurrentSecond());
+        }
+    }
+
+    private void ResetChoreManager()
+    {
+        ChoreManager choreManager = ChoreManager.Instance;
+        if (choreManager != null)
+        {
+            choreManager.isAlphabetSoupCompleted = false;
+            choreManager.isSwapPlushiesCompleted = false;
+            choreManager.isMathHomeworkCompleted = false;
+            choreManager.isGarbageCompleted = false;
+            choreManager.isOrganizeClosetCompleted = false;
+            choreManager.isFeedFishCompleted = false;
+        }
+    }
+
+    private void ResetTimer()
+    {
+        TimerScript timer = FindObjectOfType<TimerScript>();
+        if (timer != null)
+        {
+            timer.SetTime(4, 0, 0); // Set to 4 PM
+            timer.RestartTimer();
+        }
+    }
+
+    private void DestroyAllPersistentObjects()
+    {
+        // Get all game objects in the DontDestroyOnLoad scene
+        GameObject[] allObjects = Object.FindObjectsOfType<GameObject>();
+        
+        foreach (GameObject obj in allObjects)
+        {
+            // Skip essential system objects
+            if (obj == gameObject) continue; // Skip this SceneSwitcher
+            if (obj.GetComponent<DataManager>() != null) continue;
+            if (obj.GetComponent<ChoreManager>() != null) continue;
+            if (obj.GetComponent<TimerScript>() != null) continue;
+
+            // Check if the object is in the DontDestroyOnLoad scene
+            if (obj.scene.buildIndex == -1)
+            {
+                Destroy(obj);
+            }
         }
     }
 }

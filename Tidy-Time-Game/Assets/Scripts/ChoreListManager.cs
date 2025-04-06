@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class ChoresListManager : MonoBehaviour
 {
-    // Reference to the chores list panel
     public GameObject choresListPanel;
-
-    // Reference to the player's movement script
     public PlayerScript playerMovement;
+    public TimerScript timerScript;
 
-    // Open the chores list panel and disable player movement
+    void Start()
+    {
+        if (timerScript == null)
+        {
+            timerScript = FindObjectOfType<TimerScript>();
+        }
+    }
+
     public void OpenChoreList()
     {
         if (choresListPanel != null)
@@ -16,9 +21,10 @@ public class ChoresListManager : MonoBehaviour
             choresListPanel.SetActive(true);
             if (playerMovement != null)
             {
-                playerMovement.enabled = false; // Disable player movement
-                playerMovement.StopMovement(); // Call a method to stop movement
+                playerMovement.enabled = false;
+                playerMovement.StopMovement();
             }
+            // Time continues running (don't pause timer)
         }
         else
         {
@@ -26,7 +32,6 @@ public class ChoresListManager : MonoBehaviour
         }
     }
 
-    // Close the chores list panel and enable player movement
     public void CloseChoreList()
     {
         if (choresListPanel != null)
@@ -34,7 +39,7 @@ public class ChoresListManager : MonoBehaviour
             choresListPanel.SetActive(false);
             if (playerMovement != null)
             {
-                playerMovement.enabled = true; // Enable player movement
+                playerMovement.enabled = true;
             }
         }
         else
