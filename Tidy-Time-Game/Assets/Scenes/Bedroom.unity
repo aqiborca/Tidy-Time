@@ -2292,6 +2292,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterIsActive: 0
   monsterAudioSource: {fileID: 1831611755}
+  flashlightToggle: {fileID: 0}
+  monsterApproachSound: {fileID: 0}
 --- !u!4 &735026817
 Transform:
   m_ObjectHideFlags: 0
@@ -3820,7 +3822,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.06
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

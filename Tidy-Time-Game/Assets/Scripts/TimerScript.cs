@@ -5,51 +5,46 @@ using UnityEngine.SceneManagement;
 
 public class TimerScript : MonoBehaviour
 {
-    public TextMeshProUGUI timeText; // Reference to the TextMeshProUGUI component
-    private int currentHour = 4;     // Start at 4 PM
-    private int currentMinute = 0;   // Start at 0 minutes
-    private int currentSecond = 0;   // Start at 0 seconds
-    private bool isRunning = true;   // Flag to control the timer
-    private bool isPaused = false;   // Flag to pause the timer
+    public TextMeshProUGUI timeText;
+    private int currentHour = 4;
+    private int currentMinute = 0;
+    private int currentSecond = 0;
+    private bool isRunning = true;
+    private bool isPaused = false;
 
-    private static TimerScript instance;
+    public static TimerScript Instance { get; private set; } // Singleton instance
 
     void Awake()
     {
-        // Singleton pattern to ensure only one instance exists
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scene changes
-            SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to scene changes
-            ReassignTimeText(); // Assign timeText using the "Timer" tag
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            ReassignTimeText();
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate instances
+            Destroy(gameObject);
         }
     }
 
     void OnDestroy()
     {
-        // Unsubscribe to prevent memory leaks
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Check if we're in the main menu (assuming scene build index 0 is main menu)
         if (scene.buildIndex == 0)
         {
             ResetTimerToDefault();
         }
         else
         {
-            // Reassign the time text reference when loading any other scene
             ReassignTimeText();
             if (!isRunning)
             {
-                // If timer was stopped (e.g., reached 9 PM), restart it for new game
                 RestartTimer();
             }
         }
@@ -57,34 +52,19 @@ public class TimerScript : MonoBehaviour
 
     void Start()
     {
-        // Ensure the timeText is assigned
-        if (timeText == null)
-        {
-            ReassignTimeText();
-        }
-
-        if (timeText == null)
-        {
-            return;
-        }
-
-        // Initialize the text to "4:00:00 PM"
-        UpdateTimeText();
-
-        // Start the timer coroutine
+        if (timeText == null) ReassignTimeText();
+        if (timeText != null) UpdateTimeText();
         StartCoroutine(UpdateTimer());
     }
 
-    // Coroutine to update the timer
     IEnumerator UpdateTimer()
     {
         while (isRunning)
         {
-            if (!isPaused) // Only update the timer if it's not paused
+            if (!isPaused)
             {
-                yield return new WaitForSeconds(0.015f); // Wait for 0.015 seconds
+                yield return new WaitForSeconds(0.015f);
 
-                // Increment the time by 1 second
                 currentSecond++;
                 if (currentSecond >= 60)
                 {
@@ -97,115 +77,78 @@ public class TimerScript : MonoBehaviour
                     currentHour++;
                 }
 
-                // Stop the timer if it reaches 9:00:00 PM
-                if (currentHour >= 9 && currentMinute >= 0 && currentSecond >= 0)
+                // Notify MonsterSpawnManager when it's 8:30 PM
+                if (currentHour == 8 && currentMinute == 30 && currentSecond == 0)
                 {
-                    isRunning = false;
-                    Debug.Log("Timer stopped at 9:00:00 PM.");
+                    MonsterSpawnManager.Instance?.TriggerFinalSequence();
                 }
 
-                // Update the UI text
+                // End game at 9:00 PM
+                if (currentHour >= 9 && currentMinute >= 0)
+                {
+                    isRunning = false;
+                    MonsterSpawnManager.Instance?.TriggerGameOver();
+                    yield break;
+                }
+
                 UpdateTimeText();
             }
             else
             {
-                yield return null; // Wait for the next frame if paused
+                yield return null;
             }
         }
     }
 
-    // Resets timer to 4:00:00 PM without restarting it
     public void ResetTimerToDefault()
     {
         StopAllCoroutines();
         currentHour = 4;
         currentMinute = 0;
         currentSecond = 0;
-        isRunning = false; // Don't run in main menu
+        isRunning = false;
         isPaused = false;
         ReassignTimeText();
         UpdateTimeText();
     }
 
-    // Returns the current hour (used for saving)
-    public int GetCurrentHour()
-    {
-        return currentHour;
-    }
+    public int GetCurrentHour() => currentHour;
+    public int GetCurrentMinute() => currentMinute;
+    public int GetCurrentSecond() => currentSecond;
 
-    // Returns the current minute (used for saving)
-    public int GetCurrentMinute()
-    {
-        return currentMinute;
-    }
-
-    // Returns the current second (used for saving)
-    public int GetCurrentSecond()
-    {
-        return currentSecond;
-    }
-
-    // Sets the timer to a saved time (used when loading a scene)
     public void SetTime(int hour, int minute, int second, TextMeshProUGUI newTimeText = null)
     {
-        // Stop running coroutines to prevent duplicates
         StopAllCoroutines();
-
-        // Update time variables
         currentHour = hour;
         currentMinute = minute;
         currentSecond = second;
         isRunning = true;
 
-        // If a new UI reference is given, update it
         if (newTimeText != null)
         {
             timeText = newTimeText;
         }
         else
         {
-            ReassignTimeText(); // Reassign timeText if no new reference is provided
+            ReassignTimeText();
         }
 
-        if (timeText == null)
-        {
-            return;
-        }
-
-        // Update the UI text
-        UpdateTimeText();
-
-        // Restart the timer coroutine
+        if (timeText != null) UpdateTimeText();
         StartCoroutine(UpdateTimer());
     }
 
-    // Updates the UI text with the current time
     private void UpdateTimeText()
     {
-        if (timeText == null)
-        {
-            ReassignTimeText(); // Attempt to reassign timeText if it's null
-        }
-
+        if (timeText == null) ReassignTimeText();
         if (timeText != null)
         {
             timeText.text = $"{currentHour}:{currentMinute:D2}:{currentSecond:D2} PM";
         }
     }
 
-    // Pauses the timer
-    public void PauseTimer()
-    {
-        isPaused = true;
-    }
+    public void PauseTimer() => isPaused = true;
+    public void ResumeTimer() => isPaused = false;
 
-    // Resumes the timer
-    public void ResumeTimer()
-    {
-        isPaused = false;
-    }
-
-    // Reassigns the timeText reference by searching for the GameObject with the "Timer" tag
     private void ReassignTimeText()
     {
         GameObject textObject = GameObject.FindWithTag("Timer");
@@ -215,24 +158,16 @@ public class TimerScript : MonoBehaviour
         }
     }
 
-    // Restart the timer by resetting the time to 4:00:00 PM and starting the timer again
     public void RestartTimer()
     {
-        // Stop any existing coroutines to prevent duplicates
         StopAllCoroutines();
-
-        // Reset time to 4:00:00 PM
         currentHour = 4;
         currentMinute = 0;
         currentSecond = 0;
         isRunning = true;
         isPaused = false;
-
-        // Update the UI
         ReassignTimeText();
         UpdateTimeText();
-
-        // Restart the timer coroutine
         StartCoroutine(UpdateTimer());
     }
 }

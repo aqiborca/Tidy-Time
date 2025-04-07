@@ -5,8 +5,17 @@ using System.Collections;
 
 public class FlashlightToggle : MonoBehaviour
 {
+    [Header("Flashlight Objects")]
     public GameObject flashlightObject;
     public Button flashlightButton;
+
+    [Header("Audio Sources")]
+    public AudioSource normalClickAudio;
+    public AudioSource brokenClickAudio;
+    public AudioSource brokenHumAudio;
+
+    [Header("Settings")]
+    [Range(0f, 1f)] public float brokenLightAlpha = 0.05f; // Dim (5% brightness)
     private float fadeDuration = 0.1f;
     private float clickFlashDuration = 0.01f;
 
@@ -14,6 +23,8 @@ public class FlashlightToggle : MonoBehaviour
     private bool isFading = false;
     private Coroutine flashCoroutine;
     private bool isHolding = false;
+    private bool flashlightDisabled = false;
+    private bool isBroken = false;
 
     private void Start()
     {
@@ -36,55 +47,160 @@ public class FlashlightToggle : MonoBehaviour
 
         // Click (quick flash)
         flashlightButton.onClick.AddListener(OnButtonClicked);
+
+        InitializeAudioSources();
+        CheckTimeForBrokenState();
+    }
+
+    private void InitializeAudioSources()
+    {
+        if (normalClickAudio != null)
+        {
+            normalClickAudio.playOnAwake = false;
+            normalClickAudio.loop = false;
+        }
+
+        if (brokenClickAudio != null)
+        {
+            brokenClickAudio.playOnAwake = false;
+            brokenClickAudio.loop = false;
+        }
+
+        if (brokenHumAudio != null)
+        {
+            brokenHumAudio.playOnAwake = false;
+            brokenHumAudio.loop = true;
+        }
+    }
+
+    private void CheckTimeForBrokenState()
+    {
+        TimerScript timer = FindObjectOfType<TimerScript>();
+        if (timer != null && (timer.GetCurrentHour() > 8 || (timer.GetCurrentHour() == 8 && timer.GetCurrentMinute() >= 30)))
+        {
+            SetBrokenState();
+        }
+    }
+
+    public void SetBrokenState()
+    {
+        isBroken = true;
+        flashlightButton.interactable = true;
+    }
+
+    public void DisableFlashlight()
+    {
+        flashlightDisabled = true;
+        flashlightButton.interactable = false;
+        
+        if (flashCoroutine != null)
+        {
+            StopCoroutine(flashCoroutine);
+            flashCoroutine = null;
+        }
+        
+        if (isFading)
+        {
+            StopAllCoroutines();
+            isFading = false;
+        }
+        
+        SetObjectAlpha(0f);
+        StopAllSounds();
+    }
+
+    private void StopAllSounds()
+    {
+        if (normalClickAudio != null) normalClickAudio.Stop();
+        if (brokenClickAudio != null) brokenClickAudio.Stop();
+        if (brokenHumAudio != null) brokenHumAudio.Stop();
     }
 
     private void OnButtonPressed()
     {
+        if (flashlightDisabled) return;
+
         isHolding = true;
         if (flashCoroutine != null)
         {
             StopCoroutine(flashCoroutine);
             flashCoroutine = null;
         }
-        if (!isFading)
-            StartCoroutine(FadeObject(1f));
 
-        if (MonsterSpawnManager.Instance != null && MonsterSpawnManager.Instance.IsMonsterActive())
+        if (isBroken)
         {
-            MonsterSpawnManager.Instance.ScareAwayMonster();
-            Debug.Log("[Flashlight] Monster scared away!");
+            // Broken flashlight behavior (very dim)
+            PlaySound(brokenClickAudio);
+            if (!isFading)
+                StartCoroutine(FadeObject(brokenLightAlpha));
+            
+            // Play broken hum sound
+            if (brokenHumAudio != null && !brokenHumAudio.isPlaying)
+            {
+                brokenHumAudio.Play();
+            }
+        }
+        else
+        {
+            // Normal flashlight behavior
+            PlaySound(normalClickAudio);
+            if (!isFading)
+                StartCoroutine(FadeObject(1f));
+
+            if (MonsterSpawnManager.Instance != null && MonsterSpawnManager.Instance.IsMonsterActive())
+            {
+                MonsterSpawnManager.Instance.ScareAwayMonster();
+            }
         }
     }
 
     private void OnButtonReleased()
     {
+        if (flashlightDisabled) return;
+
         isHolding = false;
         if (!isFading && flashCoroutine == null)
+        {
             StartCoroutine(FadeObject(0f));
+            
+            // Stop broken hum sound when released
+            if (isBroken && brokenHumAudio != null)
+            {
+                brokenHumAudio.Stop();
+            }
+        }
     }
 
     private void OnButtonClicked()
     {
-        if (!isHolding) // Only trigger flash if not holding
+        if (flashlightDisabled) return;
+
+        if (!isHolding)
         {
             if (flashCoroutine != null)
                 StopCoroutine(flashCoroutine);
-            flashCoroutine = StartCoroutine(QuickFlash());
+
+            flashCoroutine = StartCoroutine(isBroken ? BrokenQuickFlash() : QuickFlash());
         }
     }
 
     private IEnumerator QuickFlash()
     {
-        // Fade in
+        PlaySound(normalClickAudio);
         yield return StartCoroutine(FadeObject(1f));
-        
-        // Stay on for 1 second
         yield return new WaitForSeconds(clickFlashDuration);
-        
-        // Fade out (only if not being held)
         if (!isHolding)
             yield return StartCoroutine(FadeObject(0f));
-        
+        flashCoroutine = null;
+    }
+
+    private IEnumerator BrokenQuickFlash()
+    {
+        PlaySound(brokenClickAudio);
+        yield return StartCoroutine(FadeObject(brokenLightAlpha));
+        yield return new WaitForSeconds(clickFlashDuration);
+        if (!isHolding)
+            yield return StartCoroutine(FadeObject(0f));
         flashCoroutine = null;
     }
 
@@ -111,5 +227,13 @@ public class FlashlightToggle : MonoBehaviour
         Color color = flashlightRenderer.material.color;
         color.a = alpha;
         flashlightRenderer.material.color = color;
+    }
+
+    private void PlaySound(AudioSource audioSource)
+    {
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
     }
 }
