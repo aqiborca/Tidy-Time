@@ -8,8 +8,7 @@ public class MonsterSpawnManager : MonoBehaviour
 
     public bool monsterIsActive = false;
     public AudioSource monsterAudioSource;
-    public FlashlightToggle flashlightToggle;
-    public AudioClip monsterApproachSound;
+    private FlashlightToggle flashlightToggle;
 
     // Spawn timing variables
     private float initialSpawnCooldownMin = 30f;
@@ -112,21 +111,36 @@ public class MonsterSpawnManager : MonoBehaviour
             flashlightToggle.DisableFlashlight();
         }
 
-        // Play monster approach sound
-        if (monsterAudioSource != null && monsterApproachSound != null)
-        {
-            monsterAudioSource.clip = monsterApproachSound;
-            monsterAudioSource.Play();
-        }
-
-        // Force spawn the monster
+        // Force spawn the monster (sound will start later when time reaches 8:40)
         StartCoroutine(ForceSpawnMonster());
     }
 
     IEnumerator ForceSpawnMonster()
     {
         monsterIsActive = true;
-        Debug.Log("[Monster] Final monster spawn!");
+        Debug.Log("[Monster] Final monster spawn initiated!");
+
+        // Wait until 8:40 (4 hours 40 minutes in game time)
+        while (true)
+        {
+            TimerScript timer = FindObjectOfType<TimerScript>();
+            if (timer != null)
+            {
+                float currentTime = timer.GetCurrentHour() + (timer.GetCurrentMinute() / 60f);
+                if (currentTime >= 4 + (40f / 60f)) // 4:40 in game time = 8:40 real time
+                {
+                    break;
+                }
+            }
+            yield return new WaitForSeconds(1f);
+        }
+
+        // Now it's 8:40 - start the monster sound
+        if (monsterAudioSource != null)
+        {
+            monsterAudioSource.Play();
+            Debug.Log("[Monster] Final sequence monster sound started at 8:40!");
+        }
 
         // Wait for 20 seconds before jumpscare
         yield return new WaitForSeconds(20f);
